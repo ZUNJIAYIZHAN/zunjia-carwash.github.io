@@ -780,3 +780,876 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尊驾驿站洗车销售日报表</title>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #1a3a6c 0%, #2c5aa0 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .card-title {
+            font-size: 18px;
+            color: #1a3a6c;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title span {
+            font-size: 14px;
+            color: #666;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .input-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .delete-btn {
+            color: #dc3545;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .summary {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .summary-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a3a6c;
+            margin: 5px 0;
+        }
+        .summary-label {
+            color: #666;
+            font-size: 14px;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #666;
+            font-size: 13px;
+            border-top: 1px solid #eee;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 2px solid #2c5aa0;
+            color: #2c5aa0;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>尊驾驿站洗车销售日报表</h1>
+            <div class="subtitle">金福能源站 & 尊驾驿站洗车美容会所销售数据追踪</div>
+        </header>
+        
+        <div class="content">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('sales')">销售录入</div>
+                <div class="tab" onclick="switchTab('vouchers')">赠券核销</div>
+                <div class="tab" onclick="switchTab('statistics')">数据统计</div>
+            </div>
+            
+            <div id="sales-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-title">新增销售记录 <span>促销期: 7月14日-7月31日 (满200元赠洗车券)</span></div>
+                    <div class="input-group">
+                        <div class="input-item">
+                            <label>日期</label>
+                            <input type="date" id="saleDate" value="2025-07-14">
+                        </div>
+                        <div class="input-item">
+                            <label>销售渠道</label>
+                            <select id="channel">
+                                <option value="金福能源站">金福能源站</option>
+                                <option value="尊驾驿站洗车美容会所">尊驾驿站洗车美容会所</option>
+                                <option value="抖音">抖音</option>
+                                <option value="公众号">公众号</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label>产品类型</label>
+                            <select id="productType" onchange="updatePrice()">
+                                <option value="标准洗车(轿车)">标准洗车(轿车)</option>
+                                <option value="标准洗车(SUV)">标准洗车(SUV)</option>
+                                <option value="香薰雾化消毒">香薰雾化消毒</option>
+                                <option value="洗车包A">洗车包A (6次)</option>
+                                <option value="洗车包B">洗车包B (12次)</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label>销售数量</label>
+                            <input type="number" id="quantity" min="1" value="1" onchange="checkGift()">
+                        </div>
+                        <div class="input-item">
+                            <label>单价 (元)</label>
+                            <input type="number" id="unitPrice" min="0" step="0.01" value="20" readonly>
+                        </div>
+                        <div class="input-item">
+                            <label>客户手机号</label>
+                            <input type="text" id="customerPhone" placeholder="用于赠券发放">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-item" style="flex: 2;">
+                            <label>备注</label>
+                            <textarea id="remark" rows="2" placeholder="可填写赠券信息或其他备注"></textarea>
+                        </div>
+                        <div class="input-item" id="giftInfo" style="display: none; background: #fff8e1; padding: 10px; border-radius: 5px;">
+                            <label>赠券信息</label>
+                            <div>将赠送: <span id="giftCount">0</span> 张标准洗车体验券 (15天有效期)</div>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="addRecord()">添加销售记录</button>
+                        <button class="btn btn-success" onclick="exportToExcel()">导出Excel报表</button>
+                        <button class="btn btn-danger" onclick="clearData('sales')">清除销售数据</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">销售记录表</div>
+                    <table id="salesTable">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>渠道</th>
+                                <th>产品</th>
+                                <th>数量</th>
+                                <th>单价</th>
+                                <th>金额</th>
+                                <th>赠券</th>
+                                <th>提成</th>
+                                <th>客户手机</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 数据将通过JS动态添加 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="vouchers-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">赠券核销记录</div>
+                    <div class="input-group">
+                        <div class="input-item">
+                            <label>核销日期</label>
+                            <input type="date" id="redeemDate" value="2025-07-14">
+                        </div>
+                        <div class="input-item">
+                            <label>券类型</label>
+                            <select id="voucherType">
+                                <option value="标准洗车体验券">标准洗车体验券</option>
+                                <option value="洗车包A次数">洗车包A次数</option>
+                                <option value="洗车包B次数">洗车包B次数</option>
+                                <option value="香薰雾化消毒券">香薰雾化消毒券</option>
+                            </select>
+                        </div>
+                        <div class="input-item">
+                            <label>核销数量</label>
+                            <input type="number" id="redeemQuantity" min="1" value="1">
+                        </div>
+                        <div class="input-item">
+                            <label>客户手机号</label>
+                            <input type="text" id="redeemPhone" placeholder="用于记录核销">
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="addRedeemRecord()">添加核销记录</button>
+                        <button class="btn btn-danger" onclick="clearData('vouchers')">清除核销数据</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">券包核销记录表</div>
+                    <table id="redeemTable">
+                        <thead>
+                            <tr>
+                                <th>核销日期</th>
+                                <th>券类型</th>
+                                <th>数量</th>
+                                <th>客户手机</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 数据将通过JS动态添加 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="statistics-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">销售数据汇总</div>
+                    <div class="summary">
+                        <div class="summary-item">
+                            <div class="summary-label">总销售额</div>
+                            <div class="summary-value" id="totalSales">0元</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">洗车包A销售</div>
+                            <div class="summary-value" id="packageA">0份</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">洗车包B销售</div>
+                            <div class="summary-value" id="packageB">0份</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">总提成</div>
+                            <div class="summary-value" id="totalCommission">0元</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">赠券统计</div>
+                    <div class="summary">
+                        <div class="summary-item">
+                            <div class="summary-label">已赠送洗车券</div>
+                            <div class="summary-value" id="totalGifts">0张</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">已核销洗车券</div>
+                            <div class="summary-value" id="redeemedGifts">0张</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">香薰消毒服务</div>
+                            <div class="summary-value" id="aromaService">0次</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">券包核销次数</div>
+                            <div class="summary-value" id="packageRedeems">0次</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">详细统计</div>
+                    <table id="statsTable">
+                        <thead>
+                            <tr>
+                                <th>统计项</th>
+                                <th>数量</th>
+                                <th>金额/备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>标准洗车(轿车)</td>
+                                <td id="carWashSedan">0次</td>
+                                <td id="carWashSedanAmount">0元</td>
+                            </tr>
+                            <tr>
+                                <td>标准洗车(SUV)</td>
+                                <td id="carWashSuv">0次</td>
+                                <td id="carWashSuvAmount">0元</td>
+                            </tr>
+                            <tr>
+                                <td>香薰雾化消毒</td>
+                                <td id="aromaCount">0次</td>
+                                <td id="aromaAmount">0元</td>
+                            </tr>
+                            <tr>
+                                <td>洗车包A销售</td>
+                                <td id="packageASales">0份</td>
+                                <td id="packageAAmount">0元</td>
+                            </tr>
+                            <tr>
+                                <td>洗车包B销售</td>
+                                <td id="packageBSales">0份</td>
+                                <td id="packageBAmount">0元</td>
+                            </tr>
+                            <tr>
+                                <td>洗车包A核销</td>
+                                <td id="packageARedeems">0次</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>洗车包B核销</td>
+                                <td id="packageBRedeems">0次</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>尊驾驿站洗车销售日报表系统 | 数据最后更新时间: <span id="updateTime"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化数据
+        let salesData = JSON.parse(localStorage.getItem('zunjiaSalesData')) || [];
+        let redeemData = JSON.parse(localStorage.getItem('zunjiaRedeemData')) || [];
+        
+        // 切换标签页
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            if (tabName === 'statistics') {
+                updateStatistics();
+            }
+        }
+        
+        // 更新产品价格
+        function updatePrice() {
+            const productType = document.getElementById('productType').value;
+            const priceInput = document.getElementById('unitPrice');
+            
+            switch(productType) {
+                case '标准洗车(轿车)':
+                    priceInput.value = '20';
+                    break;
+                case '标准洗车(SUV)':
+                    priceInput.value = '25';
+                    break;
+                case '香薰雾化消毒':
+                    priceInput.value = '30';
+                    break;
+                case '洗车包A':
+                    priceInput.value = '108';
+                    break;
+                case '洗车包B':
+                    priceInput.value = '200';
+                    break;
+            }
+            
+            checkGift();
+        }
+        
+        // 检查是否满足赠券条件
+        function checkGift() {
+            const productType = document.getElementById('productType').value;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const total = price * quantity;
+            
+            const giftInfo = document.getElementById('giftInfo');
+            const giftCount = document.getElementById('giftCount');
+            
+            // 促销期: 7月14日-7月31日，满200元加赠1张标准洗车体验券
+            const saleDate = new Date(document.getElementById('saleDate').value);
+            const promoStart = new Date('2025-07-14');
+            const promoEnd = new Date('2025-07-31');
+            
+            if (saleDate >= promoStart && saleDate <= promoEnd && total >= 200) {
+                const gifts = Math.floor(total / 200);
+                giftCount.textContent = gifts;
+                giftInfo.style.display = 'block';
+                document.getElementById('remark').value = `满200元赠洗车券${gifts}张`;
+            } else {
+                giftInfo.style.display = 'none';
+            }
+        }
+        
+        // 添加销售记录
+        function addRecord() {
+            const date = document.getElementById('saleDate').value;
+            const channel = document.getElementById('channel').value;
+            const productType = document.getElementById('productType').value;
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const phone = document.getElementById('customerPhone').value;
+            const remark = document.getElementById('remark').value;
+            
+            if (!date || quantity <= 0) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            // 计算赠券数量
+            let gifts = 0;
+            const total = price * quantity;
+            const saleDate = new Date(date);
+            const promoStart = new Date('2025-07-14');
+            const promoEnd = new Date('2025-07-31');
+            
+            if (saleDate >= promoStart && saleDate <= promoEnd && total >= 200) {
+                gifts = Math.floor(total / 200);
+            }
+            
+            salesData.push({
+                date,
+                channel,
+                productType,
+                quantity,
+                price,
+                gifts,
+                phone,
+                remark
+            });
+            
+            updateSalesTable();
+            document.getElementById('quantity').value = 1;
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('remark').value = '';
+            document.getElementById('giftInfo').style.display = 'none';
+            
+            alert('销售记录添加成功！');
+        }
+        
+        // 更新销售表格
+        function updateSalesTable() {
+            const tableBody = document.querySelector('#salesTable tbody');
+            tableBody.innerHTML = '';
+            
+            salesData.forEach((record, index) => {
+                const row = document.createElement('tr');
+                const amount = record.price * record.quantity;
+                
+                // 计算提成
+                let commission = 0;
+                if (record.productType === '洗车包A') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 5 : 
+                                record.channel === '金福能源站' ? 5 : 0.5;
+                } else if (record.productType === '洗车包B') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 8 : 
+                                record.channel === '金福能源站' ? 8 : 0.5;
+                }
+                commission *= record.quantity;
+                
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.channel}</td>
+                    <td>${record.productType}</td>
+                    <td>${record.quantity}</td>
+                    <td>${record.price}元</td>
+                    <td>${amount}元</td>
+                    <td>${record.gifts > 0 ? record.gifts + '张' : '-'}</td>
+                    <td>${commission > 0 ? commission + '元' : '-'}</td>
+                    <td>${record.phone || '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteRecord(${index}, 'sales')">×</button></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // 保存数据
+            localStorage.setItem('zunjiaSalesData', JSON.stringify(salesData));
+            updateStatistics();
+        }
+        
+        // 添加核销记录
+        function addRedeemRecord() {
+            const date = document.getElementById('redeemDate').value;
+            const voucherType = document.getElementById('voucherType').value;
+            const quantity = parseInt(document.getElementById('redeemQuantity').value) || 0;
+            const phone = document.getElementById('redeemPhone').value;
+            
+            if (!date || quantity <= 0) {
+                alert('请填写完整信息！');
+                return;
+            }
+            
+            redeemData.push({
+                date,
+                voucherType,
+                quantity,
+                phone
+            });
+            
+            updateRedeemTable();
+            document.getElementById('redeemQuantity').value = 1;
+            document.getElementById('redeemPhone').value = '';
+            
+            alert('核销记录添加成功！');
+        }
+        
+        // 更新核销表格
+        function updateRedeemTable() {
+            const tableBody = document.querySelector('#redeemTable tbody');
+            tableBody.innerHTML = '';
+            
+            redeemData.forEach((record, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.voucherType}</td>
+                    <td>${record.quantity}</td>
+                    <td>${record.phone || '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteRecord(${index}, 'redeem')">×</button></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // 保存数据
+            localStorage.setItem('zunjiaRedeemData', JSON.stringify(redeemData));
+            updateStatistics();
+        }
+        
+        // 删除记录
+        function deleteRecord(index, type) {
+            if (confirm('确定删除这条记录吗？')) {
+                if (type === 'sales') {
+                    salesData.splice(index, 1);
+                    updateSalesTable();
+                } else {
+                    redeemData.splice(index, 1);
+                    updateRedeemTable();
+                }
+            }
+        }
+        
+        // 清除数据
+        function clearData(type) {
+            if (confirm('确定清除所有数据吗？此操作不可恢复！')) {
+                if (type === 'sales') {
+                    salesData = [];
+                    localStorage.removeItem('zunjiaSalesData');
+                    updateSalesTable();
+                } else {
+                    redeemData = [];
+                    localStorage.removeItem('zunjiaRedeemData');
+                    updateRedeemTable();
+                }
+                alert('数据已清除！');
+            }
+        }
+        
+        // 更新统计信息
+        function updateStatistics() {
+            // 销售统计
+            let totalSales = 0;
+            let packageACount = 0;
+            let packageBCount = 0;
+            let totalCommission = 0;
+            let totalGifts = 0;
+            let carWashSedan = 0;
+            let carWashSuv = 0;
+            let aromaCount = 0;
+            let carWashSedanAmount = 0;
+            let carWashSuvAmount = 0;
+            let aromaAmount = 0;
+            let packageAAmount = 0;
+            let packageBAmount = 0;
+            
+            salesData.forEach(record => {
+                const amount = record.price * record.quantity;
+                totalSales += amount;
+                totalGifts += record.gifts || 0;
+                
+                // 计算提成
+                let commission = 0;
+                if (record.productType === '洗车包A') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 5 : 
+                                record.channel === '金福能源站' ? 5 : 0.5;
+                    packageACount += record.quantity;
+                    packageAAmount += amount;
+                } else if (record.productType === '洗车包B') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 8 : 
+                                record.channel === '金福能源站' ? 8 : 0.5;
+                    packageBCount += record.quantity;
+                    packageBAmount += amount;
+                } else if (record.productType === '标准洗车(轿车)') {
+                    carWashSedan += record.quantity;
+                    carWashSedanAmount += amount;
+                } else if (record.productType === '标准洗车(SUV)') {
+                    carWashSuv += record.quantity;
+                    carWashSuvAmount += amount;
+                } else if (record.productType === '香薰雾化消毒') {
+                    aromaCount += record.quantity;
+                    aromaAmount += amount;
+                }
+                
+                totalCommission += commission * record.quantity;
+            });
+            
+            // 核销统计
+            let redeemedGifts = 0;
+            let packageARedeems = 0;
+            let packageBRedeems = 0;
+            
+            redeemData.forEach(record => {
+                if (record.voucherType === '标准洗车体验券') {
+                    redeemedGifts += record.quantity;
+                } else if (record.voucherType === '洗车包A次数') {
+                    packageARedeems += record.quantity;
+                } else if (record.voucherType === '洗车包B次数') {
+                    packageBRedeems += record.quantity;
+                }
+            });
+            
+            // 更新显示
+            document.getElementById('totalSales').textContent = totalSales + '元';
+            document.getElementById('packageA').textContent = packageACount + '份';
+            document.getElementById('packageB').textContent = packageBCount + '份';
+            document.getElementById('totalCommission').textContent = totalCommission + '元';
+            document.getElementById('totalGifts').textContent = totalGifts + '张';
+            document.getElementById('redeemedGifts').textContent = redeemedGifts + '张';
+            document.getElementById('aromaService').textContent = aromaCount + '次';
+            document.getElementById('packageRedeems').textContent = (packageARedeems + packageBRedeems) + '次';
+            
+            document.getElementById('carWashSedan').textContent = carWashSedan + '次';
+            document.getElementById('carWashSuv').textContent = carWashSuv + '次';
+            document.getElementById('aromaCount').textContent = aromaCount + '次';
+            document.getElementById('packageASales').textContent = packageACount + '份';
+            document.getElementById('packageBSales').textContent = packageBCount + '份';
+            document.getElementById('packageARedeems').textContent = packageARedeems + '次';
+            document.getElementById('packageBRedeems').textContent = packageBRedeems + '次';
+            
+            document.getElementById('carWashSedanAmount').textContent = carWashSedanAmount + '元';
+            document.getElementById('carWashSuvAmount').textContent = carWashSuvAmount + '元';
+            document.getElementById('aromaAmount').textContent = aromaAmount + '元';
+            document.getElementById('packageAAmount').textContent = packageAAmount + '元';
+            document.getElementById('packageBAmount').textContent = packageBAmount + '元';
+            
+            // 更新时间
+            document.getElementById('updateTime').textContent = new Date().toLocaleString();
+        }
+        
+        // 导出Excel
+        function exportToExcel() {
+            if (salesData.length === 0 && redeemData.length === 0) {
+                alert('没有数据可导出！');
+                return;
+            }
+            
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            
+            // 销售数据工作表
+            const salesWSData = [
+                ['尊驾驿站洗车销售日报表'],
+                ['导出日期: ' + new Date().toLocaleDateString()],
+                [],
+                ['日期', '销售渠道', '产品类型', '数量', '单价', '金额', '赠券', '提成', '客户手机', '备注']
+            ];
+            
+            let totalSales = 0;
+            let totalCommission = 0;
+            let totalGifts = 0;
+            
+            salesData.forEach(record => {
+                const amount = record.price * record.quantity;
+                totalSales += amount;
+                totalGifts += record.gifts || 0;
+                
+                // 计算提成
+                let commission = 0;
+                if (record.productType === '洗车包A') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 5 : 
+                                record.channel === '金福能源站' ? 5 : 0.5;
+                } else if (record.productType === '洗车包B') {
+                    commission = record.channel === '尊驾驿站洗车美容会所' ? 8 : 
+                                record.channel === '金福能源站' ? 8 : 0.5;
+                }
+                commission *= record.quantity;
+                totalCommission += commission;
+                
+                salesWSData.push([
+                    record.date,
+                    record.channel,
+                    record.productType,
+                    record.quantity,
+                    record.price,
+                    amount,
+                    record.gifts > 0 ? record.gifts + '张' : '-',
+                    commission > 0 ? commission + '元' : '-',
+                    record.phone || '-',
+                    record.remark || '-'
+                ]);
+            });
+            
+            salesWSData.push([], ['总计', '', '', '', '', totalSales + '元', totalGifts + '张', totalCommission + '元', '', '']);
+            
+            const salesWS = XLSX.utils.aoa_to_sheet(salesWSData);
+            XLSX.utils.book_append_sheet(wb, salesWS, "销售记录");
+            
+            // 核销数据工作表
+            if (redeemData.length > 0) {
+                const redeemWSData = [
+                    ['尊驾驿站券包核销记录'],
+                    ['导出日期: ' + new Date().toLocaleDateString()],
+                    [],
+                    ['核销日期', '券类型', '数量', '客户手机']
+                ];
+                
+                redeemData.forEach(record => {
+                    redeemWSData.push([
+                        record.date,
+                        record.voucherType,
+                        record.quantity,
+                        record.phone || '-'
+                    ]);
+                });
+                
+                const redeemWS = XLSX.utils.aoa_to_sheet(redeemWSData);
+                XLSX.utils.book_append_sheet(wb, redeemWS, "核销记录");
+            }
+            
+            // 导出文件
+            const fileName = `尊驾驿站销售日报_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`Excel报表已生成并开始下载: ${fileName}`);
+        }
+        
+        // 初始化
+        updateSalesTable();
+        updateRedeemTable();
+        updateStatistics();
+    </script>
+</body>
+</html>
