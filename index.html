@@ -715,11 +715,11 @@
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-store"></i>
-                        <span>今日接待: <strong>24</strong> 位客户</span>
+                        <span>今日接待: <strong>0</strong> 位客户</span>
                     </div>
                     <div class="stat-item">
                         <i class="fas fa-chart-line"></i>
-                        <span>本月业绩: <strong>¥86,420</strong></span>
+                        <span>本月业绩: <strong>¥0</strong></span>
                     </div>
                 </div>
             </div>
@@ -816,23 +816,23 @@
                     <div class="summary">
                         <div class="summary-item">
                             <div class="summary-label">今日销售额</div>
-                            <div class="summary-value"><span class="currency">¥</span>3,850.00</div>
-                            <div class="trend up"><i class="fas fa-arrow-up"></i> 较昨日 +12.5%</div>
+                            <div class="summary-value"><span class="currency">¥</span>0.00</div>
+                            <div class="trend">暂无数据</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">今日订单数</div>
-                            <div class="summary-value">24</div>
-                            <div class="trend up"><i class="fas fa-arrow-up"></i> 较昨日 +20%</div>
+                            <div class="summary-value">0</div>
+                            <div class="trend">暂无数据</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">平均客单价</div>
-                            <div class="summary-value"><span class="currency">¥</span>160.42</div>
-                            <div class="trend down"><i class="fas fa-arrow-down"></i> 较昨日 -5.3%</div>
+                            <div class="summary-value"><span class="currency">¥</span>0.00</div>
+                            <div class="trend">暂无数据</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">新增会员</div>
-                            <div class="summary-value">6</div>
-                            <div class="trend up"><i class="fas fa-arrow-up"></i> 较昨日 +50%</div>
+                            <div class="summary-value">0</div>
+                            <div class="trend">暂无数据</div>
                         </div>
                     </div>
                     
@@ -850,7 +850,12 @@
                             </tr>
                         </thead>
                         <tbody id="salesTableBody">
-                            <!-- 销售记录将通过JS动态添加 -->
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-inbox" style="font-size: 40px; color: #e9ecef; margin-bottom: 15px;"></i>
+                                    <p>今日暂无销售记录</p>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -927,10 +932,14 @@
                 <div class="card">
                     <div class="card-title">
                         <span>待核销券列表</span>
-                        <span id="voucherCount">(共 8 张券)</span>
+                        <span id="voucherCount">(共 0 张券)</span>
                     </div>
                     <div id="pendingVouchersList">
-                        <!-- 券卡片将通过JS动态添加 -->
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>暂无待核销券</h3>
+                            <p>当前没有符合条件的券记录</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -953,7 +962,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 数据将通过JS动态添加 -->
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-inbox" style="font-size: 40px; color: #e9ecef; margin-bottom: 15px;"></i>
+                                    <p>今日暂无核销记录</p>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -964,23 +978,23 @@
                 <div class="summary">
                     <div class="summary-item">
                         <div class="summary-label">本月销售额</div>
-                        <div class="summary-value"><span class="currency">¥</span>86,420.00</div>
-                        <div class="trend up"><i class="fas fa-arrow-up"></i> 完成率 85.3%</div>
+                        <div class="summary-value"><span class="currency">¥</span>0.00</div>
+                        <div class="trend">暂无数据</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">会员增长</div>
-                        <div class="summary-value">+42</div>
-                        <div class="trend up"><i class="fas fa-arrow-up"></i> 较上月 +18%</div>
+                        <div class="summary-value">0</div>
+                        <div class="trend">暂无数据</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">券核销率</div>
-                        <div class="summary-value">76.8%</div>
-                        <div class="trend down"><i class="fas fa-arrow-down"></i> 较上月 -3.2%</div>
+                        <div class="summary-value">0%</div>
+                        <div class="trend">暂无数据</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">客户满意度</div>
-                        <div class="summary-value">98.2%</div>
-                        <div class="trend up"><i class="fas fa-arrow-up"></i> 共收到 56 条评价</div>
+                        <div class="summary-value">0%</div>
+                        <div class="trend">暂无数据</div>
                     </div>
                 </div>
                 
@@ -988,28 +1002,40 @@
                     <div class="stats-card">
                         <h3><i class="fas fa-chart-line"></i> 近7日销售趋势</h3>
                         <div class="stats-chart" id="salesChart">
-                            <!-- 图表将通过JS动态生成 -->
+                            <div class="empty-state" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>暂无销售数据</p>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="stats-card">
                         <h3><i class="fas fa-pie-chart"></i> 服务类型分布</h3>
                         <div class="stats-chart" id="serviceChart">
-                            <!-- 图表将通过JS动态生成 -->
+                            <div class="empty-state" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <i class="fas fa-chart-pie"></i>
+                                <p>暂无服务数据</p>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="stats-card">
                         <h3><i class="fas fa-users"></i> 会员增长趋势</h3>
                         <div class="stats-chart" id="membersChart">
-                            <!-- 图表将通过JS动态生成 -->
+                            <div class="empty-state" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <i class="fas fa-user-plus"></i>
+                                <p>暂无会员数据</p>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="stats-card">
                         <h3><i class="fas fa-percent"></i> 核销率分析</h3>
                         <div class="stats-chart" id="redemptionChart">
-                            <!-- 图表将通过JS动态生成 -->
+                            <div class="empty-state" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <i class="fas fa-ticket-alt"></i>
+                                <p>暂无核销数据</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1017,7 +1043,7 @@
         </div>
         
         <footer>
-            <p>尊驾驿站洗车销售管理系统 | 版本 2.0 | 数据最后更新时间: <span id="updateTime">2025-06-27 15:42:36</span></p>
+            <p>尊驾驿站洗车销售管理系统 | 版本 2.0 | 数据最后更新时间: <span id="updateTime">2025-06-27 00:00:00</span></p>
         </footer>
     </div>
 
@@ -1027,7 +1053,38 @@
             <h3 style="margin-bottom: 20px; color: var(--primary); font-size: 22px; display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-ticket-alt"></i> 核销券详情
             </h3>
-            <div id="voucherDetailContent"></div>
+            <div id="voucherDetailContent">
+                <div class="input-group">
+                    <div class="input-item">
+                        <label>券类型</label>
+                        <select id="modalVoucherType" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                            <option value="标准洗车体验券">标准洗车体验券</option>
+                            <option value="洗车包A次数">洗车包A次数</option>
+                            <option value="洗车包B次数">洗车包B次数</option>
+                            <option value="香薰雾化消毒券">香薰雾化消毒券</option>
+                            <option value="汽油优惠券">汽油优惠券</option>
+                        </select>
+                    </div>
+                    <div class="input-item">
+                        <label>券编号</label>
+                        <input type="text" id="modalVoucherCode" placeholder="输入券编号" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-item">
+                        <label>客户手机号</label>
+                        <input type="text" id="modalVoucherPhone" placeholder="输入客户手机号" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    </div>
+                    <div class="input-item">
+                        <label>核销数量</label>
+                        <input type="number" id="modalRedeemQuantity" min="1" value="1" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    </div>
+                </div>
+                <div class="input-item">
+                    <label>核销备注</label>
+                    <textarea id="modalVoucherRemark" rows="3" placeholder="输入核销备注信息" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
+                </div>
+            </div>
             <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px;">
                 <button class="btn btn-danger" onclick="hideModal()">
                     <i class="fas fa-times"></i> 取消
@@ -1053,47 +1110,12 @@
             
             // 初始化应用
             init() {
-                this.loadData();
                 this.setupEventListeners();
                 this.updateUI();
-                this.initCharts();
                 this.updateTime();
                 
                 // 设置定时更新时间
                 setInterval(() => this.updateTime(), 60000);
-            },
-            
-            // 加载数据
-            loadData() {
-                // 尝试从localStorage加载数据
-                this.data.sales = JSON.parse(localStorage.getItem('zunjiaSalesData')) || [];
-                this.data.redeem = JSON.parse(localStorage.getItem('zunjiaRedeemData')) || [];
-                this.data.vouchers = JSON.parse(localStorage.getItem('zunjiaVoucherData')) || [];
-                
-                // 如果没有券数据，生成示例数据
-                if (this.data.vouchers.length === 0) {
-                    this.data.vouchers = this.generateSampleVouchers();
-                    this.saveData('vouchers');
-                }
-                
-                // 如果没有销售数据，生成示例销售记录
-                if (this.data.sales.length === 0) {
-                    this.data.sales = this.generateSampleSales();
-                    this.saveData('sales');
-                }
-            },
-            
-            // 保存数据
-            saveData(type = 'all') {
-                if (type === 'sales' || type === 'all') {
-                    localStorage.setItem('zunjiaSalesData', JSON.stringify(this.data.sales));
-                }
-                if (type === 'redeem' || type === 'all') {
-                    localStorage.setItem('zunjiaRedeemData', JSON.stringify(this.data.redeem));
-                }
-                if (type === 'vouchers' || type === 'all') {
-                    localStorage.setItem('zunjiaVoucherData', JSON.stringify(this.data.vouchers));
-                }
             },
             
             // 设置事件监听器
@@ -1115,10 +1137,7 @@
                 document.getElementById('redeemDate').value = today;
                 document.getElementById('saleDate').value = today;
                 
-                // 更新券状态
-                this.updateVoucherStatus();
-                
-                // 初始化日期显示
+                // 更新日期显示
                 this.updateDateDisplay();
             },
             
@@ -1126,7 +1145,6 @@
             updateUI() {
                 this.updateVoucherTables();
                 this.updateSalesTable();
-                this.updateDateDisplay();
                 this.updateTime();
                 
                 // 更新标签页活动状态
@@ -1152,150 +1170,6 @@
                 
                 // 更新标签指示器
                 document.querySelector('.tabs').className = `tabs ${tabName}-active`;
-            },
-            
-            // 更新券状态
-            updateVoucherStatus() {
-                const today = new Date().toISOString().split('T')[0];
-                this.data.vouchers.forEach(voucher => {
-                    if (voucher.status === 'valid' && voucher.expireDate < today) {
-                        voucher.status = 'expired';
-                    }
-                });
-                this.saveData('vouchers');
-            },
-            
-            // 生成示例券数据
-            generateSampleVouchers() {
-                const today = new Date();
-                const sampleVouchers = [];
-                
-                // 标准洗车体验券
-                for (let i = 1; i <= 8; i++) {
-                    const issueDate = new Date('2025-07-' + (14 + Math.floor(i/2)));
-                    const expireDate = new Date(issueDate);
-                    expireDate.setDate(issueDate.getDate() + 15);
-                    
-                    sampleVouchers.push({
-                        id: 'WX-' + Date.now() + i,
-                        type: '标准洗车体验券',
-                        code: 'VC-' + Math.floor(1000 + Math.random() * 9000),
-                        source: i % 2 === 0 ? '金福能源站' : '尊驾驿站',
-                        phone: '138' + Math.floor(10000000 + Math.random() * 90000000),
-                        issueDate: issueDate.toISOString().split('T')[0],
-                        expireDate: expireDate.toISOString().split('T')[0],
-                        status: 'valid',
-                        quantity: 1,
-                        remark: i % 2 === 0 ? '满200元赠送' : '促销活动赠送'
-                    });
-                }
-                
-                // 洗车包A次数
-                for (let i = 1; i <= 5; i++) {
-                    const issueDate = new Date('2025-07-' + (15 + i));
-                    const expireDate = new Date(issueDate);
-                    expireDate.setDate(issueDate.getDate() + 180);
-                    
-                    sampleVouchers.push({
-                        id: 'PKA-' + Date.now() + i,
-                        type: '洗车包A次数',
-                        code: 'PA-' + Math.floor(1000 + Math.random() * 9000),
-                        source: '洗车包A销售',
-                        phone: '139' + Math.floor(10000000 + Math.random() * 90000000),
-                        issueDate: issueDate.toISOString().split('T')[0],
-                        expireDate: expireDate.toISOString().split('T')[0],
-                        status: 'valid',
-                        quantity: 6,
-                        remaining: 6 - Math.floor(i/2),
-                        remark: '洗车包A剩余次数'
-                    });
-                }
-                
-                // 洗车包B次数
-                for (let i = 1; i <= 3; i++) {
-                    const issueDate = new Date('2025-07-' + (16 + i));
-                    const expireDate = new Date(issueDate);
-                    expireDate.setDate(issueDate.getDate() + 360);
-                    
-                    sampleVouchers.push({
-                        id: 'PKB-' + Date.now() + i,
-                        type: '洗车包B次数',
-                        code: 'PB-' + Math.floor(1000 + Math.random() * 9000),
-                        source: '洗车包B销售',
-                        phone: '137' + Math.floor(10000000 + Math.random() * 90000000),
-                        issueDate: issueDate.toISOString().split('T')[0],
-                        expireDate: expireDate.toISOString().split('T')[0],
-                        status: 'valid',
-                        quantity: 12,
-                        remaining: 12 - i * 2,
-                        remark: '洗车包B剩余次数'
-                    });
-                }
-                
-                // 汽油优惠券
-                for (let i = 1; i <= 4; i++) {
-                    const issueDate = new Date('2025-07-' + (17 + i));
-                    const expireDate = new Date(issueDate);
-                    expireDate.setDate(issueDate.getDate() + 30);
-                    
-                    sampleVouchers.push({
-                        id: 'OIL-' + Date.now() + i,
-                        type: '汽油优惠券',
-                        code: 'OIL-' + Math.floor(1000 + Math.random() * 9000),
-                        source: '洗车包赠送',
-                        phone: '136' + Math.floor(10000000 + Math.random() * 90000000),
-                        issueDate: issueDate.toISOString().split('T')[0],
-                        expireDate: expireDate.toISOString().split('T')[0],
-                        status: 'valid',
-                        quantity: 1,
-                        discount: '满20升减15元',
-                        remark: '与洗车包同时赠送'
-                    });
-                }
-                
-                return sampleVouchers;
-            },
-            
-            // 生成示例销售记录
-            generateSampleSales() {
-                const sales = [];
-                const services = ['洗车服务', '洗车包A', '洗车包B', '美容服务', '打蜡服务', '内饰清洁'];
-                const staff = ['张明', '李红', '王芳', '刘强'];
-                const payments = ['微信支付', '支付宝', '现金', '银行卡', '会员卡'];
-                
-                // 生成今天的销售记录
-                for (let i = 0; i < 8; i++) {
-                    const hour = 8 + Math.floor(i * 1.5);
-                    sales.push({
-                        id: 'S-' + Date.now() + i,
-                        date: '2025-06-27',
-                        time: `${hour < 10 ? '0' + hour : hour}:${i % 2 === 0 ? '15' : '45'}`,
-                        type: services[Math.floor(Math.random() * services.length)],
-                        amount: (Math.random() * 300 + 30).toFixed(2),
-                        phone: '138' + Math.floor(10000000 + Math.random() * 90000000),
-                        salesPerson: staff[Math.floor(Math.random() * staff.length)],
-                        payment: payments[Math.floor(Math.random() * payments.length)],
-                        notes: ['新客户', '老客户', '会员', '促销活动', '无备注'][Math.floor(Math.random() * 5)]
-                    });
-                }
-                
-                // 生成昨天的销售记录
-                for (let i = 0; i < 6; i++) {
-                    const hour = 9 + Math.floor(i * 1.7);
-                    sales.push({
-                        id: 'S-' + Date.now() + (i + 10),
-                        date: '2025-06-26',
-                        time: `${hour < 10 ? '0' + hour : hour}:${i % 2 === 0 ? '20' : '50'}`,
-                        type: services[Math.floor(Math.random() * services.length)],
-                        amount: (Math.random() * 280 + 40).toFixed(2),
-                        phone: '139' + Math.floor(10000000 + Math.random() * 90000000),
-                        salesPerson: staff[Math.floor(Math.random() * staff.length)],
-                        payment: payments[Math.floor(Math.random() * payments.length)],
-                        notes: ['新客户', '老客户', '会员', '促销活动', '无备注'][Math.floor(Math.random() * 5)]
-                    });
-                }
-                
-                return sales;
             },
             
             // 更新券表格
@@ -1441,7 +1315,6 @@
                 };
                 
                 this.data.sales.push(newSale);
-                this.saveData('sales');
                 this.updateSalesTable();
                 
                 // 清空表单
@@ -1467,7 +1340,6 @@
                     const index = this.data.sales.findIndex(s => s.id === id);
                     if (index !== -1) {
                         this.data.sales.splice(index, 1);
-                        this.saveData('sales');
                         this.updateSalesTable();
                         alert('销售记录已删除！');
                     }
@@ -1752,8 +1624,6 @@
                     }
                 }
                 
-                this.saveData('redeem');
-                this.saveData('vouchers');
                 this.updateVoucherTables();
                 this.hideModal();
                 alert('核销记录添加成功！');
@@ -1807,8 +1677,6 @@
                     }
                 });
                 
-                this.saveData('redeem');
-                this.saveData('vouchers');
                 this.updateVoucherTables();
                 alert(`成功核销 ${selectedVouchers.length} 张券！`);
             },
@@ -1838,8 +1706,6 @@
                         }
                         
                         this.data.redeem.splice(recordIndex, 1);
-                        this.saveData('redeem');
-                        this.saveData('vouchers');
                         this.updateVoucherTables();
                     }
                 }
@@ -1850,11 +1716,9 @@
                 if (confirm(`确定清除所有${type === 'sales' ? '销售' : '核销'}数据吗？此操作不可撤销！`)) {
                     if (type === 'sales') {
                         this.data.sales = [];
-                        this.saveData('sales');
                         this.updateSalesTable();
                     } else if (type === 'vouchers') {
                         this.data.redeem = [];
-                        this.saveData('redeem');
                         this.updateVoucherTables();
                     }
                     alert('数据已清除！');
@@ -1900,87 +1764,27 @@
                 const salesChart = document.getElementById('salesChart');
                 salesChart.innerHTML = '';
                 
-                const salesData = [4580, 5210, 4230, 5780, 6100, 7250, 5420];
-                const maxSales = Math.max(...salesData);
-                
-                salesData.forEach((value, index) => {
-                    const height = (value / maxSales) * 90;
-                    const bar = document.createElement('div');
-                    bar.className = 'chart-bar';
-                    bar.style.height = `${height}%`;
-                    bar.style.backgroundColor = `hsl(${210 + index * 15}, 70%, 50%)`;
-                    bar.innerHTML = `
-                        <div class="chart-bar-value">¥${value.toLocaleString()}</div>
-                        <div class="chart-bar-label">${['周一', '周二', '周三', '周四', '周五', '周六', '周日'][index]}</div>
-                    `;
-                    salesChart.appendChild(bar);
-                });
-                
                 // 服务类型分布
                 const serviceChart = document.getElementById('serviceChart');
                 serviceChart.innerHTML = '';
-                
-                const serviceData = [
-                    {name: '洗车服务', value: 45, color: '#2c5aa0'},
-                    {name: '洗车包', value: 22, color: '#28a745'},
-                    {name: '美容服务', value: 18, color: '#ffc107'},
-                    {name: '其他', value: 15, color: '#17a2b8'}
-                ];
-                
-                serviceData.forEach(item => {
-                    const bar = document.createElement('div');
-                    bar.className = 'chart-bar';
-                    bar.style.height = `${item.value}%`;
-                    bar.style.backgroundColor = item.color;
-                    bar.innerHTML = `
-                        <div class="chart-bar-value">${item.value}%</div>
-                        <div class="chart-bar-label">${item.name}</div>
-                    `;
-                    serviceChart.appendChild(bar);
-                });
                 
                 // 会员增长趋势
                 const membersChart = document.getElementById('membersChart');
                 membersChart.innerHTML = '';
                 
-                const membersData = [18, 22, 28, 26, 32, 42];
-                const maxMembers = Math.max(...membersData);
-                
-                membersData.forEach((value, index) => {
-                    const height = (value / maxMembers) * 90;
-                    const bar = document.createElement('div');
-                    bar.className = 'chart-bar';
-                    bar.style.height = `${height}%`;
-                    bar.style.backgroundColor = `hsl(${160 + index * 20}, 70%, 50%)`;
-                    bar.innerHTML = `
-                        <div class="chart-bar-value">${value}</div>
-                        <div class="chart-bar-label">${index + 1}月</div>
-                    `;
-                    membersChart.appendChild(bar);
-                });
-                
                 // 核销率分析
                 const redemptionChart = document.getElementById('redemptionChart');
                 redemptionChart.innerHTML = '';
                 
-                const redemptionData = [
-                    {name: '标准券', value: 75},
-                    {name: '洗车包A', value: 85},
-                    {name: '洗车包B', value: 90},
-                    {name: '消毒券', value: 60},
-                    {name: '汽油券', value: 50}
-                ];
-                
-                redemptionData.forEach(item => {
-                    const bar = document.createElement('div');
-                    bar.className = 'chart-bar';
-                    bar.style.height = `${item.value}%`;
-                    bar.style.backgroundColor = `hsl(${200 - item.value / 2}, 70%, 50%)`;
-                    bar.innerHTML = `
-                        <div class="chart-bar-value">${item.value}%</div>
-                        <div class="chart-bar-label">${item.name}</div>
+                // 所有图表显示空状态
+                const charts = [salesChart, serviceChart, membersChart, redemptionChart];
+                charts.forEach(chart => {
+                    chart.innerHTML = `
+                        <div class="empty-state" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                            <i class="fas fa-chart-bar"></i>
+                            <p>暂无数据</p>
+                        </div>
                     `;
-                    redemptionChart.appendChild(bar);
                 });
             },
             
