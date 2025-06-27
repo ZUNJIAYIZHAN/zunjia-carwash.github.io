@@ -601,10 +601,31 @@
             margin-bottom: 3px;
         }
         
+        .voucher-detail div {
+            font-size: 14px;
+        }
+        
         .voucher-actions {
             display: flex;
             gap: 10px;
             margin-top: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 40px;
+            color: #e9ecef;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
         }
         
         @media (max-width: 992px) {
@@ -1173,7 +1194,6 @@
             updateSalesPersonOptions();
             updateDateDisplay();
             updateTime();
-            loadSampleData();
             updatePrice(); // 初始化价格
             
             // 设置定时更新时间
@@ -2421,11 +2441,6 @@
             // 生成Excel文件并下载
             const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
             XLSX.writeFile(wb, `尊驾驿站统计数据_${dateStr}.xlsx`);
-        }
-            // 更新表格
-            updateSalesTable();
-            filterVouchers();
-            updateTodayRedeemTable();
         }
 
         // 更新日期显示
