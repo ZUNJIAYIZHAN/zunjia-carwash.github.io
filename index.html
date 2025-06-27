@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尊驾驿站洗车销售日报表系统</title>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3e8f7 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #1a3a6c 0%, #2c5aa0 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .date-period {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .card-title {
+            font-size: 22px;
+            color: #1a3a6c;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef2f7;
+            display: flex;
+            align-items: center;
+        }
+        .card-title i {
+            margin-right: 12px;
+            color: #2c5aa0;
+            font-size: 24px;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .input-item {
+            flex: 1;
+            min-width: 220px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        select, input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #f8fafc;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1a3a6c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+        }
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+        }
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c53030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+        }
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            font-size: 15px;
+        }
+        th {
+            background: #1a3a6c;
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #ebf8ff;
+        }
+        .action-cell {
+            text-align: center;
+        }
+        .delete-btn {
+            background: #fed7d7;
+            color: #e53e3e;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+        .delete-btn:hover {
+            background: #e53e3e;
+            color: white;
+            transform: scale(1.1);
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(120deg, #ebf4ff 0%, #c3dafe 100%);
+            border-radius: 12px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .summary-item {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c5aa0;
+            margin: 15px 0;
+        }
+        .summary-label {
+            color: #4a5568;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4299e1;
+            border-radius: 5px;
+        }
+        .instructions {
+            background: #fff9e6;
+            border-left: 4px solid #f0ad4e;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .instructions h3 {
+            color: #d9534f;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            padding-left: 25px;
+        }
+        .instructions li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718096;
+            font-size: 15px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 30px;
+        }
+        .product-info {
+            background: #e6f7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .product-info h4 {
+            color: #1a3a6c;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            .date-period {
+                position: static;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>尊驾驿站洗车销售日报表系统</h1>
+            <div class="subtitle">销售数据追踪与分析平台 - 助力实现3200台洗车销售目标</div>
+            <div class="date-period">销售周期: 2025年7月8日 - 2026年2月28日</div>
+        </header>
+        
+        <div class="content">
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> 系统使用说明</h3>
+                <ol>
+                    <li>在下方表单中录入每日销售数据，包括日期、渠道、产品类型等信息</li>
+                    <li>添加记录后，数据会自动保存到本地（即使关闭浏览器也不会丢失）</li>
+                    <li>在表格中可查看所有销售记录，支持删除操作</li>
+                    <li>系统实时计算销售数据汇总，帮助您监控目标进度</li>
+                    <li>点击"导出Excel报表"按钮可将数据导出为Excel文件</li>
+                    <li>系统根据尊驾驿站的销售方案预设了产品和价格信息</li>
+                </ol>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-plus-circle"></i> 新增销售记录
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-item">
+                        <label><i class="fas fa-calendar"></i> 日期</label>
+                        <input type="date" id="saleDate" value="2025-07-08">
+                    </div>
+                    <div class="input-item">
+                        <label><i class="fas fa-shopping-cart"></i> 销售渠道</label>
+                        <select id="channel">
+                            <option value="公众号">公众号</option>
+                            <option value="抖音">抖音</option>
+                            <option value="加油站二维码">加油站二维码</option>
+                            <option value="洗车店二维码">洗车店二维码</option>
+                            <option value="线下活动">线下活动</option>
+                            <option value="门店直接销售">门店直接销售</option>
+                            <option value="直播销售">直播销售</option>
+                        </select>
+                    </div>
+                    <div class="input-item">
+                        <label><i class="fas fa-tag"></i> 产品类型</label>
+                        <select id="productType">
+                            <option value="单次洗车券">单次洗车券</option>
+                            <option value="洗车包A">洗车包A (6次)</option>
+                            <option value="洗车包B">洗车包B (12次)</option>
+                            <option value="1元洗车体验券">1元洗车体验券</option>
+                            <option value="积分兑换洗车券">积分兑换洗车券</option>
+                            <option value="门市价洗车">门市价洗车</option>
+                            <option value="香薰雾化消毒">香薰雾化消毒</option>
+                        </select>
+                    </div>
+                    <div class="input-item">
+                        <label><i class="fas fa-car"></i> 车型</label>
+                        <select id="carType">
+                            <option value="轿车">轿车</option>
+                            <option value="SUV">SUV</option>
+                            <option value="不限">不限</option>
+                        </select>
+                    </div>
+                    <div class="input-item">
+                        <label><i class="fas fa-hashtag"></i> 销售数量</label>
+                        <input type="number" id="quantity" min="1" value="1">
+                    </div>
+                    <div class="input-item">
+                        <label><i class="fas fa-tag"></i> 单价 (元)</label>
+                        <input type="number" id="unitPrice" min="0" step="0.01" value="20">
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h4><i class="fas fa-lightbulb"></i> 产品定价参考</h4>
+                    <p>• 单次洗车券: 公众号/抖音价15-22元 (轿车20元, SUV25元)</p>
+                    <p>• 洗车包A: 6次标准洗车，执行价108元 (18元/次)</p>
+                    <p>• 洗车包B: 12次标准洗车，执行价192元 (16元/次)</p>
+                    <p>• 1元洗车体验券: 限试营业期间使用</p>
+                    <p>• 香薰雾化消毒: 公众号会员价18元</p>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-primary" onclick="addRecord()">
+                        <i class="fas fa-plus"></i> 添加记录
+                    </button>
+                    <button class="btn btn-success" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> 导出Excel报表
+                    </button>
+                    <button class="btn btn-secondary" onclick="addSampleData()">
+                        <i class="fas fa-vial"></i> 添加示例数据
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllData()">
+                        <i class="fas fa-trash-alt"></i> 清除所有数据
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-list"></i> 销售记录表
+                </div>
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>销售渠道</th>
+                            <th>产品类型</th>
+                            <th>车型</th>
+                            <th>数量</th>
+                            <th>单价(元)</th>
+                            <th>金额(元)</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 数据将通过JavaScript动态添加 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i> 销售数据汇总
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">总销售额</div>
+                        <div class="summary-value" id="totalSales">0 元</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="salesProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">洗车包A销售</div>
+                        <div class="summary-value" id="packageA">0 份</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="packageAProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">洗车包B销售</div>
+                        <div class="summary-value" id="packageB">0 份</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="packageBProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">公众号销售</div>
+                        <div class="summary-value" id="officialAccount">0 笔</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="channelProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>尊驾驿站洗车销售日报表系统 | 数据最后更新时间: <span id="currentDate"></span></p>
+            <p>© 2025 尊驾驿站 版权所有 | 销售目标: 3200台 (截止2026年2月28日)</p>
+        </footer>
+    </div>
+
+    <script>
+        // 设置当前日期
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        // 初始化销售数据
+        let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+        
+        // 渲染表格
+        function renderTable() {
+            const tableBody = document.querySelector('#salesTable tbody');
+            tableBody.innerHTML = '';
+            
+            let totalSales = 0;
+            let packageACount = 0;
+            let packageBCount = 0;
+            let officialAccountCount = 0;
+            
+            salesData.forEach((record, index) => {
+                const row = document.createElement('tr');
+                
+                // 计算金额
+                const amount = record.quantity * record.unitPrice;
+                totalSales += amount;
+                
+                // 统计特定数据
+                if (record.productType === '洗车包A') packageACount += record.quantity;
+                if (record.productType === '洗车包B') packageBCount += record.quantity;
+                if (record.channel === '公众号') officialAccountCount += record.quantity;
+                
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.channel}</td>
+                    <td>${record.productType}</td>
+                    <td>${record.carType}</td>
+                    <td>${record.quantity}</td>
+                    <td>${record.unitPrice.toFixed(2)}</td>
+                    <td>${amount.toFixed(2)}</td>
+                    <td class="action-cell">
+                        <button class="delete-btn" onclick="deleteRecord(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // 更新汇总数据
+            document.getElementById('totalSales').textContent = totalSales.toFixed(2) + ' 元';
+            document.getElementById('packageA').textContent = packageACount + ' 份';
+            document.getElementById('packageB').textContent = packageBCount + ' 份';
+            document.getElementById('officialAccount').textContent = officialAccountCount + ' 笔';
+            
+            // 更新进度条
+            document.getElementById('salesProgress').style.width = Math.min(totalSales/50000*100, 100) + '%';
+            document.getElementById('packageAProgress').style.width = Math.min(packageACount/200*100, 100) + '%';
+            document.getElementById('packageBProgress').style.width = Math.min(packageBCount/100*100, 100) + '%';
+            document.getElementById('channelProgress').style.width = Math.min(officialAccountCount/500*100, 100) + '%';
+            
+            // 保存到本地存储
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+        }
+        
+        // 添加记录
+        function addRecord() {
+            const date = document.getElementById('saleDate').value;
+            const channel = document.getElementById('channel').value;
+            const productType = document.getElementById('productType').value;
+            const carType = document.getElementById('carType').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value);
+            
+            if (!date || !channel || !productType || !carType || quantity <= 0 || unitPrice <= 0) {
+                alert('请填写完整的销售信息！');
+                return;
+            }
+            
+            salesData.push({
+                date,
+                channel,
+                productType,
+                carType,
+                quantity,
+                unitPrice
+            });
+            
+            renderTable();
+            
+            // 重置数量
+            document.getElementById('quantity').value = 1;
+            
+            // 显示成功消息
+            alert(`成功添加销售记录！\n${productType} × ${quantity}`);
+        }
+        
+        // 删除记录
+        function deleteRecord(index) {
+            if (confirm('确定要删除这条销售记录吗？')) {
+                const deleted = salesData.splice(index, 1);
+                renderTable();
+                alert(`已删除记录：${deleted[0].productType} × ${deleted[0].quantity}`);
+            }
+        }
+        
+        // 清除所有数据
+        function clearAllData() {
+            if (confirm('确定要清除所有销售数据吗？此操作不可恢复！')) {
+                salesData = [];
+                localStorage.removeItem('salesData');
+                renderTable();
+                alert('所有销售数据已清除！');
+            }
+        }
+        
+        // 添加示例数据
+        function addSampleData() {
+            const sampleData = [
+                {date: '2025-07-08', channel: '公众号', productType: '1元洗车体验券', carType: '轿车', quantity: 5, unitPrice: 1},
+                {date: '2025-07-11', channel: '线下活动', productType: '洗车包A', carType: '不限', quantity: 3, unitPrice: 102},
+                {date: '2025-07-15', channel: '抖音', productType: '单次洗车券', carType: 'SUV', quantity: 8, unitPrice: 22},
+                {date: '2025-07-20', channel: '洗车店二维码', productType: '洗车包B', carType: '不限', quantity: 2, unitPrice: 180},
+                {date: '2025-07-25', channel: '公众号', productType: '香薰雾化消毒', carType: '轿车', quantity: 4, unitPrice: 18},
+            ];
+            
+            salesData = [...salesData, ...sampleData];
+            renderTable();
+            alert('已添加5条示例数据！');
+        }
+        
+        // 导出Excel
+        function exportToExcel() {
+            if (salesData.length === 0) {
+                alert('没有销售数据可导出！');
+                return;
+            }
+            
+            // 准备Excel数据
+            const excelData = [
+                ['尊驾驿站洗车销售日报表'],
+                ['导出日期: ' + new Date().toLocaleDateString('zh-CN')],
+                [],
+                ['日期', '销售渠道', '产品类型', '车型', '数量', '单价(元)', '金额(元)']
+            ];
+            
+            // 添加销售数据
+            salesData.forEach(record => {
+                const amount = record.quantity * record.unitPrice;
+                excelData.push([
+                    record.date,
+                    record.channel,
+                    record.productType,
+                    record.carType,
+                    record.quantity,
+                    record.unitPrice.toFixed(2),
+                    amount.toFixed(2)
+                ]);
+            });
+            
+            // 添加汇总行
+            const totalSales = salesData.reduce((sum, record) => 
+                sum + record.quantity * record.unitPrice, 0);
+            
+            excelData.push([]);
+            excelData.push(['总计', '', '', '', '', '', totalSales.toFixed(2)]);
+            excelData.push([]);
+            excelData.push(['制表人: ________________', '', '审核人: ________________']);
+            
+            // 创建工作簿
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "销售日报");
+            
+            // 设置列宽
+            const colWidths = [
+                {wch: 12}, // 日期
+                {wch: 15}, // 销售渠道
+                {wch: 20}, // 产品类型
+                {wch: 10}, // 车型
+                {wch: 8},  // 数量
+                {wch: 10}, // 单价
+                {wch: 12}  // 金额
+            ];
+            ws['!cols'] = colWidths;
+            
+            // 导出文件
+            const fileName = `尊驾驿站销售日报_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`Excel报表已生成并开始下载: ${fileName}`);
+        }
+        
+        // 产品类型变化时更新默认价格
+        document.getElementById('productType').addEventListener('change', function() {
+            const productType = this.value;
+            const unitPriceInput = document.getElementById('unitPrice');
+            
+            // 设置默认价格
+            switch(productType) {
+                case '单次洗车券':
+                    unitPriceInput.value = '20.00';
+                    break;
+                case '洗车包A':
+                    unitPriceInput.value = '108.00';
+                    break;
+                case '洗车包B':
+                    unitPriceInput.value = '192.00';
+                    break;
+                case '1元洗车体验券':
+                    unitPriceInput.value = '1.00';
+                    break;
+                case '积分兑换洗车券':
+                    unitPriceInput.value = '0.00';
+                    break;
+                case '门市价洗车':
+                    unitPriceInput.value = '25.00';
+                    break;
+                case '香薰雾化消毒':
+                    unitPriceInput.value = '18.00';
+                    break;
+                default:
+                    unitPriceInput.value = '20.00';
+            }
+        });
+        
+        // 初始化渲染
+        renderTable();
+    </script>
+</body>
+</html>
