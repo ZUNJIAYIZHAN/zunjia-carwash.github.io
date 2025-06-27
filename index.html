@@ -524,6 +524,12 @@
             margin-top: 25px;
         }
         
+        .price-info {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
         @media (max-width: 992px) {
             .input-group, .filter-group {
                 flex-direction: column;
@@ -610,10 +616,11 @@
                                 <option value="洗车包B">洗车包B (12次标准洗车+2次香薰)</option>
                                 <option value="其他服务">其他服务</option>
                             </select>
+                            <div class="price-info" id="priceInfo">标准价格: ¥20.00</div>
                         </div>
                         <div class="input-item">
                             <label>金额 (元)</label>
-                            <input type="number" id="saleAmount" placeholder="输入销售金额">
+                            <input type="number" id="saleAmount" placeholder="自动生成" readonly>
                         </div>
                     </div>
                     
@@ -630,7 +637,7 @@
                         </div>
                         <div class="input-item">
                             <label>销售渠道</label>
-                            <select id="salesChannel">
+                            <select id="salesChannel" onchange="calculateCommission()">
                                 <option value="金福能源站">金福能源站</option>
                                 <option value="尊驾驿站">尊驾驿站</option>
                                 <option value="抖音直播">抖音直播</option>
@@ -787,6 +794,20 @@
                     <input type="number" id="pricePackageB" value="200">
                 </div>
                 
+                <h4>春节价格设置</h4>
+                <div class="settings-row">
+                    <label>春节加价</label>
+                    <input type="number" id="priceHoliday" value="5">
+                </div>
+                <div class="settings-row">
+                    <label>春节开始日期</label>
+                    <input type="date" id="holidayStart" value="2025-01-10">
+                </div>
+                <div class="settings-row">
+                    <label>春节结束日期</label>
+                    <input type="date" id="holidayEnd" value="2025-01-30">
+                </div>
+                
                 <h4>提成设置</h4>
                 <div class="settings-row">
                     <label>洗车包A提成</label>
@@ -824,7 +845,10 @@
                     suv: 25,
                     disinfect: 30,
                     packageA: 108,
-                    packageB: 200
+                    packageB: 200,
+                    holidaySurcharge: 5,
+                    holidayStart: '2025-01-10',
+                    holidayEnd: '2025-01-30'
                 },
                 commissions: {
                     packageA: 5,
@@ -841,9 +865,18 @@
             updateDateDisplay();
             updateTime();
             loadSalesData();
+            updatePrice(); // 初始化价格
             
             // 设置定时更新时间
             setInterval(updateTime, 60000);
+        }
+
+        // 检查是否为春节假期
+        function isHolidayPeriod(dateStr) {
+            const date = new Date(dateStr);
+            const start = new Date(AppData.settings.prices.holidayStart);
+            const end = new Date(AppData.settings.prices.holidayEnd);
+            return date >= start && date <= end;
         }
 
         // 更新销售人员下拉选项
@@ -912,6 +945,9 @@
             document.getElementById('priceDisinfect').value = AppData.settings.prices.disinfect;
             document.getElementById('pricePackageA').value = AppData.settings.prices.packageA;
             document.getElementById('pricePackageB').value = AppData.settings.prices.packageB;
+            document.getElementById('priceHoliday').value = AppData.settings.prices.holidaySurcharge;
+            document.getElementById('holidayStart').value = AppData.settings.prices.holidayStart;
+            document.getElementById('holidayEnd').value = AppData.settings.prices.holidayEnd;
             document.getElementById('commissionA').value = AppData.settings.commissions.packageA;
             document.getElementById('commissionB').value = AppData.settings.commissions.packageB;
             document.getElementById('commissionMarket').value = AppData.settings.commissions.market;
@@ -930,7 +966,10 @@
                 suv: parseFloat(document.getElementById('priceSuv').value) || 25,
                 disinfect: parseFloat(document.getElementById('priceDisinfect').value) || 30,
                 packageA: parseFloat(document.getElementById('pricePackageA').value) || 108,
-                packageB: parseFloat(document.getElementById('pricePackageB').value) || 200
+                packageB: parseFloat(document.getElementById('pricePackageB').value) || 200,
+                holidaySurcharge: parseFloat(document.getElementById('priceHoliday').value) || 5,
+                holidayStart: document.getElementById('holidayStart').value || '2025-01-10',
+                holidayEnd: document.getElementById('holidayEnd').value || '2025-01-30'
             };
             
             // 保存提成设置
@@ -945,34 +984,55 @@
             
             hideSettings();
             alert('设置已保存！');
+            
+            // 更新当前价格显示
+            updatePrice();
         }
 
-        // 根据选择的销售类型更新默认价格
+        // 根据选择的销售类型更新价格
         function updatePrice() {
             const type = document.getElementById('saleType').value;
+            const date = document.getElementById('saleDate').value;
+            const isHoliday = isHolidayPeriod(date);
             let price = 0;
+            let priceInfo = '';
             
             switch(type) {
                 case '标准洗车（轿车）':
                     price = AppData.settings.prices.car;
+                    priceInfo = `标准价格: ¥${price.toFixed(2)}`;
+                    if (isHoliday) {
+                        price += AppData.settings.prices.holidaySurcharge;
+                        priceInfo += ` (春节加价: +¥${AppData.settings.prices.holidaySurcharge.toFixed(2)})`;
+                    }
                     break;
                 case '标准洗车（SUV）':
                     price = AppData.settings.prices.suv;
+                    priceInfo = `标准价格: ¥${price.toFixed(2)}`;
+                    if (isHoliday) {
+                        price += AppData.settings.prices.holidaySurcharge;
+                        priceInfo += ` (春节加价: +¥${AppData.settings.prices.holidaySurcharge.toFixed(2)})`;
+                    }
                     break;
                 case '香薰雾化消毒':
                     price = AppData.settings.prices.disinfect;
+                    priceInfo = `标准价格: ¥${price.toFixed(2)}`;
                     break;
                 case '洗车包A':
                     price = AppData.settings.prices.packageA;
+                    priceInfo = `套餐价格: ¥${price.toFixed(2)} (6次标准洗车+1次香薰)`;
                     break;
                 case '洗车包B':
                     price = AppData.settings.prices.packageB;
+                    priceInfo = `套餐价格: ¥${price.toFixed(2)} (12次标准洗车+2次香薰)`;
                     break;
                 default:
                     price = 0;
+                    priceInfo = '请选择服务类型';
             }
             
-            document.getElementById('saleAmount').value = price;
+            document.getElementById('saleAmount').value = price.toFixed(2);
+            document.getElementById('priceInfo').textContent = priceInfo;
             calculateCommission();
         }
 
@@ -988,7 +1048,7 @@
                 commission = channel === '抖音直播' ? AppData.settings.commissions.market : AppData.settings.commissions.packageB;
             }
             
-            document.getElementById('commissionAmount').value = commission;
+            document.getElementById('commissionAmount').value = commission.toFixed(2);
         }
 
         // 添加销售记录
@@ -998,207 +1058,4 @@
             const amount = parseFloat(document.getElementById('saleAmount').value) || 0;
             const phone = document.getElementById('customerPhone').value;
             const salesPerson = document.getElementById('salesPerson').value;
-            const channel = document.getElementById('salesChannel').value;
-            const payment = document.getElementById('paymentMethod').value;
-            const commission = parseFloat(document.getElementById('commissionAmount').value) || 0;
-            const notes = document.getElementById('saleNotes').value;
-            
-            // 验证必填字段
-            if (!type || !amount || !salesPerson || !payment) {
-                alert('请填写必填字段：销售类型、金额、销售员和支付方式');
-                return;
-            }
-            
-            const now = new Date();
-            const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            
-            const newSale = {
-                id: 'S-' + Date.now(),
-                date: date,
-                time: time,
-                type: type,
-                amount: amount.toFixed(2),
-                phone: phone || '未提供',
-                salesPerson: salesPerson,
-                channel: channel,
-                payment: payment,
-                commission: commission.toFixed(2),
-                notes: notes || '无备注'
-            };
-            
-            AppData.sales.push(newSale);
-            updateSalesTable();
-            
-            // 清空表单
-            document.getElementById('customerPhone').value = '';
-            document.getElementById('saleNotes').value = '';
-            
-            alert('销售记录添加成功！');
-        }
-
-        // 更新销售表格
-        function updateSalesTable() {
-            const tableBody = document.getElementById('salesTableBody');
-            tableBody.innerHTML = '';
-            
-            const today = new Date().toISOString().split('T')[0];
-            const todaySales = AppData.sales.filter(sale => sale.date === today);
-            
-            if (todaySales.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="9" style="text-align: center; padding: 30px;">
-                            <i class="fas fa-inbox" style="font-size: 40px; color: #e9ecef; margin-bottom: 15px;"></i>
-                            <p>今日暂无销售记录</p>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                let totalAmount = 0;
-                let totalCommission = 0;
-                
-                todaySales.forEach((sale, index) => {
-                    totalAmount += parseFloat(sale.amount);
-                    totalCommission += parseFloat(sale.commission);
-                    
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${sale.time}</td>
-                        <td>${sale.type}</td>
-                        <td>¥${sale.amount}</td>
-                        <td>${sale.phone}</td>
-                        <td>${sale.salesPerson}</td>
-                        <td>${sale.channel}</td>
-                        <td>${sale.payment}</td>
-                        <td>¥${sale.commission}</td>
-                        <td class="action-cell">
-                            <button class="action-btn edit" onclick="editSaleRecord('${sale.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="deleteSaleRecord('${sale.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-                
-                // 更新汇总信息
-                document.querySelector('.summary-value:nth-child(1)').innerHTML = `<span class="currency">¥</span>${totalAmount.toFixed(2)}`;
-                document.querySelector('.summary-value:nth-child(2)').textContent = todaySales.length;
-                document.querySelector('.summary-value:nth-child(3)').innerHTML = `<span class="currency">¥</span>${(totalAmount / todaySales.length).toFixed(2)}`;
-                document.querySelector('.summary-value:nth-child(4)').innerHTML = `<span class="currency">¥</span>${totalCommission.toFixed(2)}`;
-            }
-        }
-
-        // 编辑销售记录
-        function editSaleRecord(id) {
-            const sale = AppData.sales.find(s => s.id === id);
-            if (sale) {
-                // 在实际应用中，这里会打开编辑表单
-                alert(`即将编辑记录: ${sale.type} - ¥${sale.amount}`);
-            }
-        }
-
-        // 删除销售记录
-        function deleteSaleRecord(id) {
-            if (confirm('确定删除这条销售记录吗？')) {
-                const index = AppData.sales.findIndex(s => s.id === id);
-                if (index !== -1) {
-                    AppData.sales.splice(index, 1);
-                    updateSalesTable();
-                    alert('销售记录已删除！');
-                }
-            }
-        }
-
-        // 加载销售数据
-        function loadSalesData() {
-            // 在实际应用中，这里会从服务器加载数据
-            // 现在使用模拟数据
-            AppData.sales = [
-                {
-                    id: 'S-1',
-                    date: '2025-06-27',
-                    time: '09:15',
-                    type: '标准洗车（轿车）',
-                    amount: '20.00',
-                    phone: '13800138001',
-                    salesPerson: '张明',
-                    channel: '金福能源站',
-                    payment: '微信支付',
-                    commission: '0.50',
-                    notes: '普通客户'
-                },
-                {
-                    id: 'S-2',
-                    date: '2025-06-27',
-                    time: '10:30',
-                    type: '洗车包A',
-                    amount: '108.00',
-                    phone: '13800138002',
-                    salesPerson: '李红',
-                    channel: '尊驾驿站',
-                    payment: '现金',
-                    commission: '5.00',
-                    notes: '新客户购买洗车包'
-                }
-            ];
-            
-            updateSalesTable();
-        }
-
-        // 清空销售表单
-        function clearSaleForm() {
-            document.getElementById('customerPhone').value = '';
-            document.getElementById('saleNotes').value = '';
-        }
-
-        // 导出销售数据
-        function exportSalesData() {
-            // 创建工作簿
-            const wb = XLSX.utils.book_new();
-            
-            // 准备数据
-            const headers = ['时间', '类型', '金额', '客户手机', '销售员', '渠道', '支付方式', '提成', '备注'];
-            const data = AppData.sales.map(sale => [
-                sale.time,
-                sale.type,
-                parseFloat(sale.amount),
-                sale.phone,
-                sale.salesPerson,
-                sale.channel,
-                sale.payment,
-                parseFloat(sale.commission),
-                sale.notes
-            ]);
-            
-            // 添加工作表
-            const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-            XLSX.utils.book_append_sheet(wb, ws, "销售数据");
-            
-            // 生成Excel文件并下载
-            const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
-            XLSX.writeFile(wb, `尊驾驿站销售数据_${dateStr}.xlsx`);
-        }
-
-        // 更新日期显示
-        function updateDateDisplay() {
-            const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
-            document.getElementById('saleDateDisplay').textContent = now.toLocaleDateString('zh-CN', options);
-        }
-
-        // 更新时间显示
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('updateTime').textContent = 
-                now.toLocaleString('zh-CN', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        }
-
-        // 初始化应用
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
-</body>
-</html>
+            const channel = document.getElementById
