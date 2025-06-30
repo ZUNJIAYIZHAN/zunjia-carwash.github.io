@@ -39,15 +39,97 @@
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .container {
             max-width: 1300px;
-            margin: 0 auto;
+            width: 100%;
             background: white;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.12);
             overflow: hidden;
+        }
+        
+        /* 登录界面样式 */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .login-form h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.15);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .powered-by {
+            margin-top: 25px;
+            color: var(--gray);
+            font-size: 14px;
         }
         
         header {
@@ -57,17 +139,48 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .user-info i {
+            font-size: 18px;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .user-action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .user-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
         
         .header-content {
@@ -110,6 +223,7 @@
         
         .content {
             padding: 25px 30px;
+            display: none; /* 初始隐藏，登录后显示 */
         }
         
         .card {
@@ -607,6 +721,77 @@
             margin-top: 10px;
         }
         
+        .import-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+            transition: var(--transition);
+        }
+        
+        .import-section:hover {
+            border-color: var(--primary);
+            background: #f0f5ff;
+        }
+        
+        .import-btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .import-btn input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .permission-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+            background: var(--info);
+            color: white;
+        }
+        
+        .admin-only {
+            display: none;
+        }
+        
+        .admin-visible {
+            display: block;
+        }
+        
+        .voucher-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 40px;
+            color: #e9ecef;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state p {
+            margin-top: 10px;
+        }
+        
         @media (max-width: 992px) {
             .input-group, .filter-group {
                 flex-direction: column;
@@ -631,46 +816,84 @@
             .voucher-details {
                 grid-template-columns: 1fr 1fr;
             }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
         
         @media (max-width: 768px) {
             .voucher-details {
                 grid-template-columns: 1fr;
             }
+            
+            .login-form {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 登录界面 -->
+        <div id="loginScreen" class="login-container">
+            <div class="login-form">
+                <h2><i class="fas fa-car"></i> 尊驾驿站管理系统</h2>
+                
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="输入您的用户名" autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="输入您的密码">
+                </div>
+                
+                <button class="login-btn" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> 登录系统
+                </button>
+                
+                <div class="powered-by">
+                    <p>尊驾驿站洗车销售管理系统 V2.5</p>
+                    <p>© 2025 金福能源站 & 尊驾驿站</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主系统界面（默认隐藏） -->
         <header>
             <div class="header-content">
-                <h1><i class="fas fa-car"></i> 尊驾驿站洗车销售管理系统</h1>
-                <div class="subtitle">金福能源站 & 尊驾驿站洗车美容会所 - 专业汽车美容服务</div>
-                
-                <div class="stats-bar">
-                    <div class="stat-item">
-                        <i class="fas fa-calendar-day"></i>
-                        <span id="currentDate">2025年6月27日 星期五</span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-store"></i>
-                        <span>今日接待: <strong>0</strong> 位客户</span>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>本月业绩: <strong>¥0</strong></span>
-                    </div>
+                <div>
+                    <h1><i class="fas fa-car"></i> 尊驾驿站洗车销售管理系统</h1>
+                    <div class="subtitle">金福能源站 & 尊驾驿站洗车美容会所 - 专业汽车美容服务</div>
                 </div>
+            </div>
+            
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="currentUser">未登录</span>
+                <span id="userRole" class="permission-badge">未登录</span>
+            </div>
+            
+            <div class="user-actions">
+                <button class="user-action-btn" title="刷新数据" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="user-action-btn" title="登出系统" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
         </header>
         
-        <div class="content">
+        <div class="content" id="mainContent">
             <div class="tabs sales-active">
                 <div class="tab active" data-tab="sales">销售录入</div>
                 <div class="tab" data-tab="vouchers">赠券核销</div>
                 <div class="tab" data-tab="statistics">数据统计</div>
-                <div class="tab" data-tab="settings" onclick="showSettings()">
-                    <i class="fas fa-cog"></i> 设置
+                <div class="tab admin-only" data-tab="settings" onclick="showSettings()">
+                    <i class="fas fa-cog"></i> 系统设置
                 </div>
             </div>
             
@@ -685,7 +908,7 @@
                     <div class="input-group">
                         <div class="input-item">
                             <label>销售日期</label>
-                            <input type="date" id="saleDate" value="2025-06-27" onchange="updatePrice()">
+                            <input type="date" id="saleDate" value="2025-06-30" onchange="updatePrice()">
                         </div>
                         <div class="input-item">
                             <label>销售类型</label>
@@ -757,7 +980,10 @@
                             <i class="fas fa-redo"></i> 重置表单
                         </button>
                         <button class="btn btn-info" onclick="exportSalesData()">
-                            <i class="fas fa-file-export"></i> 导出销售数据
+                            <i class="fas fa-file-export"></i> 导出Excel
+                        </button>
+                        <button class="btn btn-warning admin-only" onclick="importSalesData()">
+                            <i class="fas fa-file-import"></i> 导入Excel
                         </button>
                     </div>
                 </div>
@@ -765,7 +991,7 @@
                 <div class="card">
                     <div class="card-title">
                         <span>今日销售记录</span>
-                        <span id="saleDateDisplay">2025年6月27日</span>
+                        <span id="saleDateDisplay">2025年6月30日</span>
                     </div>
                     
                     <div class="summary">
@@ -855,7 +1081,7 @@
                     <div class="input-group">
                         <div class="input-item">
                             <label>核销日期</label>
-                            <input type="date" id="redeemDate" value="2025-06-27">
+                            <input type="date" id="redeemDate" value="2025-06-30">
                         </div>
                         <div class="input-item">
                             <label>操作员</label>
@@ -876,8 +1102,11 @@
                         <button class="btn btn-info" onclick="batchRedeem()">
                             <i class="fas fa-check-double"></i> 批量核销
                         </button>
-                        <button class="btn btn-danger" onclick="clearVoucherData()">
+                        <button class="btn btn-danger admin-only" onclick="clearVoucherData()">
                             <i class="fas fa-trash-alt"></i> 清除核销数据
+                        </button>
+                        <button class="btn btn-warning" onclick="exportVoucherData()">
+                            <i class="fas fa-file-export"></i> 导出Excel
                         </button>
                     </div>
                 </div>
@@ -899,7 +1128,7 @@
                 <div class="card">
                     <div class="card-title">
                         <span>今日核销记录</span>
-                        <span id="todayRedeemDate">2025年6月27日</span>
+                        <span id="todayRedeemDate">2025年6月30日</span>
                     </div>
                     <table id="todayRedeemTable">
                         <thead>
@@ -941,7 +1170,7 @@
                         </div>
                         <div class="input-item">
                             <label>结束日期</label>
-                            <input type="date" id="statsEndDate" value="2025-06-27">
+                            <input type="date" id="statsEndDate" value="2025-06-30">
                         </div>
                         <div class="input-item">
                             <label>统计维度</label>
@@ -1003,7 +1232,7 @@
         </div>
         
         <footer>
-            <p>尊驾驿站洗车销售管理系统 | 版本 2.0 | 数据最后更新时间: <span id="updateTime">2025-06-27 00:00:00</span></p>
+            <p>尊驾驿站洗车销售管理系统 | 版本 2.5 | 数据最后更新时间: <span id="updateTime">2025-06-30 00:00:00</span></p>
         </footer>
     </div>
 
@@ -1064,6 +1293,23 @@
             </h3>
             
             <div class="settings-form">
+                <h4>用户权限管理</h4>
+                <div id="userList">
+                    <!-- 用户列表将在这里动态生成 -->
+                </div>
+                
+                <div class="settings-row">
+                    <input type="text" id="newUserName" placeholder="输入用户名">
+                    <input type="password" id="newUserPassword" placeholder="输入密码">
+                    <select id="newUserRole">
+                        <option value="user">普通用户</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="addUser()">
+                        <i class="fas fa-plus"></i> 添加用户
+                    </button>
+                </div>
+                
                 <h4>销售人员管理</h4>
                 <div id="salesPersonList">
                     <!-- 销售人员列表将在这里动态生成 -->
@@ -1137,10 +1383,56 @@
             </div>
         </div>
     </div>
+    
+    <!-- Excel导入区域 -->
+    <div id="importSalesModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.25);">
+            <h3 style="margin-bottom: 20px; color: var(--primary); font-size: 22px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-file-excel"></i> 导入销售数据
+            </h3>
+            
+            <div class="import-section">
+                <i class="fas fa-file-excel" style="font-size: 48px; color: #1d6f42; margin-bottom: 15px;"></i>
+                <h4>上传Excel文件</h4>
+                <p>请选择包含销售数据的Excel文件 (.xlsx)</p>
+                
+                <div class="import-btn">
+                    <button class="btn btn-warning">
+                        <i class="fas fa-upload"></i> 选择Excel文件
+                    </button>
+                    <input type="file" id="salesImportFile" accept=".xlsx" onchange="handleSalesImport(event)">
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 13px; color: #6c757d;">
+                    <p>Excel格式要求：</p>
+                    <ul style="text-align: left; padding-left: 20px; margin-top: 10px;">
+                        <li>日期、时间、类型、金额、客户手机、销售员、渠道、支付方式、提成、备注</li>
+                        <li>第一行为标题行，从第二行开始为数据</li>
+                        <li>日期格式：YYYY-MM-DD</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px;">
+                <button class="btn btn-danger" onclick="document.getElementById('importSalesModal').style.display = 'none'">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // 用户数据（模拟）
+        const Users = [
+            { username: "admin", password: "admin123", role: "admin", name: "系统管理员" },
+            { username: "manager", password: "manager123", role: "admin", name: "门店经理" },
+            { username: "sales1", password: "sales123", role: "user", name: "销售员小张" },
+            { username: "sales2", password: "sales123", role: "user", name: "销售员小李" }
+        ];
+        
         // 应用数据
         const AppData = {
+            currentUser: null,
             sales: [],
             vouchers: [],
             redeem: [],
@@ -1170,11 +1462,8 @@
 
         // 初始化应用
         function initApp() {
-            updateSalesPersonOptions();
             updateDateDisplay();
             updateTime();
-            loadSampleData();
-            updatePrice(); // 初始化价格
             
             // 设置定时更新时间
             setInterval(updateTime, 60000);
@@ -1194,6 +1483,70 @@
             document.getElementById('filterVoucherType').addEventListener('change', filterVouchers);
             document.getElementById('filterVoucherStatus').addEventListener('change', filterVouchers);
             document.getElementById('filterPhone').addEventListener('input', filterVouchers);
+            
+            // 加载示例数据
+            loadSampleData();
+        }
+        
+        // 登录功能
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const user = Users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                AppData.currentUser = user;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('currentUser').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role === 'admin' ? '管理员' : '普通用户';
+                
+                // 更新权限显示
+                updatePermissions();
+                
+                // 初始化应用功能
+                updateSalesPersonOptions();
+                updatePrice(); // 初始化价格
+                updateSalesTable();
+                filterVouchers();
+                updateTodayRedeemTable();
+            } else {
+                alert('用户名或密码错误，请重试！');
+            }
+        }
+        
+        // 更新权限显示
+        function updatePermissions() {
+            const adminElements = document.querySelectorAll('.admin-only');
+            const isAdmin = AppData.currentUser.role === 'admin';
+            
+            adminElements.forEach(el => {
+                el.style.display = isAdmin ? 'inline-flex' : 'none';
+            });
+            
+            // 更新设置标签页显示
+            const settingsTab = document.querySelector('.tab[data-tab="settings"]');
+            settingsTab.style.display = isAdmin ? 'block' : 'none';
+        }
+        
+        // 登出系统
+        function logout() {
+            if (confirm('确定要退出系统吗？')) {
+                AppData.currentUser = null;
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('mainContent').style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+        
+        // 刷新数据
+        function refreshData() {
+            updateSalesTable();
+            filterVouchers();
+            updateTodayRedeemTable();
+            alert('数据已刷新！');
         }
 
         // 切换标签页
@@ -1263,6 +1616,27 @@
                 list.appendChild(row);
             });
         }
+        
+        // 更新用户列表
+        function updateUserList() {
+            const list = document.getElementById('userList');
+            list.innerHTML = '';
+            
+            Users.forEach((user, index) => {
+                if (user.username === AppData.currentUser.username) return; // 不显示当前用户
+                
+                const row = document.createElement('div');
+                row.className = 'settings-row';
+                row.innerHTML = `
+                    <span>${user.name} (${user.username})</span>
+                    <span class="permission-badge">${user.role === 'admin' ? '管理员' : '普通用户'}</span>
+                    <button class="btn btn-danger" onclick="removeUser(${index})">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                `;
+                list.appendChild(row);
+            });
+        }
 
         // 添加销售人员
         function addSalesPerson() {
@@ -1275,6 +1649,45 @@
                 nameInput.value = '';
             } else if (AppData.settings.salesPersons.includes(name)) {
                 alert('该销售人员已存在！');
+            }
+        }
+        
+        // 添加用户
+        function addUser() {
+            const username = document.getElementById('newUserName').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const role = document.getElementById('newUserRole').value;
+            const name = username;
+            
+            if (!username || !password) {
+                alert('请输入用户名和密码！');
+                return;
+            }
+            
+            if (Users.some(u => u.username === username)) {
+                alert('该用户名已存在！');
+                return;
+            }
+            
+            Users.push({
+                username,
+                password,
+                role,
+                name
+            });
+            
+            updateUserList();
+            document.getElementById('newUserName').value = '';
+            document.getElementById('newUserPassword').value = '';
+            
+            alert('用户添加成功！');
+        }
+        
+        // 删除用户
+        function removeUser(index) {
+            if (confirm(`确定删除用户 ${Users[index].name} 吗？`)) {
+                Users.splice(index, 1);
+                updateUserList();
             }
         }
 
@@ -1302,6 +1715,9 @@
             document.getElementById('commissionA').value = AppData.settings.commissions.packageA;
             document.getElementById('commissionB').value = AppData.settings.commissions.packageB;
             document.getElementById('commissionMarket').value = AppData.settings.commissions.market;
+            
+            // 更新用户列表
+            updateUserList();
         }
 
         // 隐藏设置面板
@@ -1485,22 +1901,6 @@
                     expireDate: getFutureDate(180), // 180天有效期
                     remark: '洗车包A赠送香薰消毒'
                 });
-                
-                // 生成汽油优惠券
-                for (let i = 1; i <= 6; i++) {
-                    AppData.vouchers.push({
-                        id: 'V-' + now.getTime() + 'G' + i,
-                        code: baseCode + '-G' + i,
-                        type: '汽油优惠券',
-                        saleId: sale.id,
-                        phone: sale.phone,
-                        status: 'valid',
-                        issueDate: sale.date,
-                        expireDate: getFutureDate(180), // 180天有效期
-                        discount: '满20升减15元',
-                        remark: '洗车包A赠送汽油券'
-                    });
-                }
             } else if (sale.type === '洗车包B') {
                 // 洗车包B包含12次标准洗车和2次香薰
                 for (let i = 1; i <= 12; i++) {
@@ -1529,22 +1929,6 @@
                         issueDate: sale.date,
                         expireDate: getFutureDate(360), // 360天有效期
                         remark: `洗车包B赠送香薰消毒${i}`
-                    });
-                }
-                
-                // 生成汽油优惠券
-                for (let i = 1; i <= 12; i++) {
-                    AppData.vouchers.push({
-                        id: 'V-' + now.getTime() + 'G' + i,
-                        code: baseCode + '-G' + i,
-                        type: '汽油优惠券',
-                        saleId: sale.id,
-                        phone: sale.phone,
-                        status: 'valid',
-                        issueDate: sale.date,
-                        expireDate: getFutureDate(360), // 360天有效期
-                        discount: '满20升减15元',
-                        remark: '洗车包B赠送汽油券'
                     });
                 }
             }
@@ -1670,6 +2054,89 @@
             const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
             XLSX.writeFile(wb, `尊驾驿站销售数据_${dateStr}.xlsx`);
         }
+        
+        // 导出券数据
+        function exportVoucherData() {
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            
+            // 准备数据
+            const headers = ['券编号', '券类型', '发放日期', '有效期至', '客户手机', '状态', '备注'];
+            const data = AppData.vouchers.map(voucher => [
+                voucher.code,
+                voucher.type,
+                voucher.issueDate,
+                voucher.expireDate,
+                voucher.phone,
+                voucher.status === 'valid' ? '未使用' : voucher.status === 'used' ? '已核销' : '已过期',
+                voucher.remark
+            ]);
+            
+            // 添加工作表
+            const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+            XLSX.utils.book_append_sheet(wb, ws, "赠券数据");
+            
+            // 生成Excel文件并下载
+            const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+            XLSX.writeFile(wb, `尊驾驿站赠券数据_${dateStr}.xlsx`);
+        }
+        
+        // 导入销售数据
+        function importSalesData() {
+            document.getElementById('importSalesModal').style.display = 'flex';
+        }
+        
+        // 处理Excel导入
+        function handleSalesImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // 获取第一个工作表
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                
+                // 处理导入的数据
+                let importedCount = 0;
+                jsonData.forEach(row => {
+                    // 确保数据格式正确
+                    if (row['日期'] && row['类型'] && row['金额']) {
+                        const newSale = {
+                            id: 'S-IMP-' + Date.now() + Math.random().toString(36).substr(2, 5),
+                            date: row['日期'],
+                            time: row['时间'] || '12:00',
+                            type: row['类型'],
+                            amount: row['金额'].toFixed(2),
+                            phone: row['客户手机'] || '未提供',
+                            salesPerson: row['销售员'] || '导入数据',
+                            channel: row['渠道'] || '其他渠道',
+                            payment: row['支付方式'] || '微信支付',
+                            commission: row['提成'] || '0.00',
+                            notes: row['备注'] || 'Excel导入'
+                        };
+                        
+                        AppData.sales.push(newSale);
+                        importedCount++;
+                    }
+                });
+                
+                if (importedCount > 0) {
+                    updateSalesTable();
+                    alert(`成功导入 ${importedCount} 条销售记录！`);
+                } else {
+                    alert('未找到有效的销售记录数据！');
+                }
+                
+                // 关闭导入窗口
+                document.getElementById('importSalesModal').style.display = 'none';
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
 
         // 显示核销模态框
         function showRedeemModal(voucherId = null) {
@@ -1712,12 +2179,6 @@
                             <div class="voucher-detail">
                                 <label>剩余次数</label>
                                 <div>${voucher.remaining || 1}次</div>
-                            </div>
-                            ` : ''}
-                            ${voucher.type === '汽油优惠券' ? `
-                            <div class="voucher-detail">
-                                <label>优惠内容</label>
-                                <div>${voucher.discount || '无'}</div>
                             </div>
                             ` : ''}
                         </div>
@@ -2005,12 +2466,6 @@
                             <div class="voucher-detail">
                                 <label>剩余次数</label>
                                 <div>${voucher.remaining || 1}次</div>
-                            </div>
-                            ` : ''}
-                            ${voucher.type === '汽油优惠券' ? `
-                            <div class="voucher-detail">
-                                <label>优惠内容</label>
-                                <div>${voucher.discount || '无'}</div>
                             </div>
                             ` : ''}
                         </div>
@@ -2429,7 +2884,7 @@
             AppData.sales = [
                 {
                     id: 'S-1',
-                    date: '2025-06-27',
+                    date: '2025-06-30',
                     time: '09:15',
                     type: '标准洗车（轿车）',
                     amount: '20.00',
@@ -2442,7 +2897,7 @@
                 },
                 {
                     id: 'S-2',
-                    date: '2025-06-27',
+                    date: '2025-06-30',
                     time: '10:30',
                     type: '洗车包A',
                     amount: '108.00',
@@ -2455,7 +2910,7 @@
                 },
                 {
                     id: 'S-3',
-                    date: '2025-06-26',
+                    date: '2025-06-29',
                     time: '14:45',
                     type: '标准洗车（SUV）',
                     amount: '25.00',
@@ -2468,7 +2923,7 @@
                 },
                 {
                     id: 'S-4',
-                    date: '2025-06-26',
+                    date: '2025-06-29',
                     time: '16:20',
                     type: '洗车包B',
                     amount: '200.00',
@@ -2490,7 +2945,7 @@
                     saleId: 'S-2',
                     phone: '13800138002',
                     status: 'valid',
-                    issueDate: '2025-06-27',
+                    issueDate: '2025-06-30',
                     expireDate: '2025-12-24',
                     remaining: 1,
                     remark: '洗车包A第1次洗车'
@@ -2502,7 +2957,7 @@
                     saleId: 'S-2',
                     phone: '13800138002',
                     status: 'valid',
-                    issueDate: '2025-06-27',
+                    issueDate: '2025-06-30',
                     expireDate: '2025-12-24',
                     remark: '洗车包A赠送香薰消毒'
                 },
@@ -2513,7 +2968,7 @@
                     saleId: 'S-4',
                     phone: '13800138004',
                     status: 'valid',
-                    issueDate: '2025-06-26',
+                    issueDate: '2025-06-29',
                     expireDate: '2026-06-21',
                     remaining: 1,
                     remark: '洗车包B第1次洗车'
@@ -2525,7 +2980,7 @@
                     saleId: 'S-4',
                     phone: '13800138004',
                     status: 'valid',
-                    issueDate: '2025-06-26',
+                    issueDate: '2025-06-29',
                     expireDate: '2026-06-21',
                     remark: '洗车包B赠送香薰消毒1'
                 }
@@ -2534,29 +2989,38 @@
             // 示例核销数据
             AppData.redeem = [
                 {
-                    id: 'V-5',
-                    date: '2025-06-27',
-                    time: '11:30',
-                    voucherType: '标准洗车体验券',
-                    code: 'VC-789012',
-                    phone: '13800138005',
+                    id: 'R-1',
+                    date: '2025-06-30',
+                    time: '10:00',
+                    voucherType: '洗车包A次数',
+                    code: 'VC-123456-W1',
+                    quantity: 1,
+                    phone: '13800138002',
                     operator: '张明',
                     status: 'used',
-                    remark: '满200元赠送'
+                    expireDate: '2025-12-24',
+                    remark: '客户洗车使用'
+                },
+                {
+                    id: 'R-2',
+                    date: '2025-06-30',
+                    time: '11:30',
+                    voucherType: '香薰雾化消毒券',
+                    code: 'VC-123456-D',
+                    quantity: 1,
+                    phone: '13800138002',
+                    operator: '李红',
+                    status: 'used',
+                    expireDate: '2025-12-24',
+                    remark: '洗车后使用'
                 }
             ];
-            
-            // 更新表格
-            updateSalesTable();
-            filterVouchers();
-            updateTodayRedeemTable();
         }
 
         // 更新日期显示
         function updateDateDisplay() {
             const now = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
             document.getElementById('saleDateDisplay').textContent = now.toLocaleDateString('zh-CN', options);
         }
 
