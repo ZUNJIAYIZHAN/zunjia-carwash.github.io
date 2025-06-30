@@ -39,14 +39,12 @@
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         
         .container {
             max-width: 1300px;
             width: 100%;
+            margin: 0 auto;
             background: white;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.12);
@@ -537,6 +535,7 @@
         .tabs.sales-active::after { transform: translateX(0); }
         .tabs.vouchers-active::after { transform: translateX(100%); }
         .tabs.statistics-active::after { transform: translateX(200%); }
+        .tabs.users-active::after { transform: translateX(300%); }
         
         .tab {
             padding: 14px 24px;
@@ -892,6 +891,7 @@
                 <div class="tab active" data-tab="sales">销售录入</div>
                 <div class="tab" data-tab="vouchers">赠券核销</div>
                 <div class="tab" data-tab="statistics">数据统计</div>
+                <div class="tab" data-tab="users">用户管理</div>
                 <div class="tab admin-only" data-tab="settings" onclick="showSettings()">
                     <i class="fas fa-cog"></i> 系统设置
                 </div>
@@ -1229,6 +1229,72 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- 用户管理标签页 -->
+            <div id="users-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-title">
+                        <span>用户管理</span>
+                        <span>系统用户账号管理</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-item">
+                            <label>用户名</label>
+                            <input type="text" id="newUserName" placeholder="输入用户名">
+                        </div>
+                        <div class="input-item">
+                            <label>密码</label>
+                            <input type="password" id="newUserPassword" placeholder="输入密码">
+                        </div>
+                        <div class="input-item">
+                            <label>角色</label>
+                            <select id="newUserRole">
+                                <option value="user">普通用户</option>
+                                <option value="admin">管理员</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button class="btn btn-primary" onclick="addUser()">
+                            <i class="fas fa-plus"></i> 添加用户
+                        </button>
+                        <button class="btn btn-success" onclick="exportUserData()">
+                            <i class="fas fa-file-export"></i> 导出Excel
+                        </button>
+                        <button class="btn btn-danger" onclick="importUserData()">
+                            <i class="fas fa-file-import"></i> 导入Excel
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <span>用户列表</span>
+                        <span id="userCount">共 0 个用户</span>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>姓名</th>
+                                <th>角色</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-inbox" style="font-size: 40px; color: #e9ecef; margin-bottom: 15px;"></i>
+                                    <p>暂无用户数据</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         
         <footer>
@@ -1293,35 +1359,6 @@
             </h3>
             
             <div class="settings-form">
-                <h4>用户权限管理</h4>
-                <div id="userList">
-                    <!-- 用户列表将在这里动态生成 -->
-                </div>
-                
-                <div class="settings-row">
-                    <input type="text" id="newUserName" placeholder="输入用户名">
-                    <input type="password" id="newUserPassword" placeholder="输入密码">
-                    <select id="newUserRole">
-                        <option value="user">普通用户</option>
-                        <option value="admin">管理员</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="addUser()">
-                        <i class="fas fa-plus"></i> 添加用户
-                    </button>
-                </div>
-                
-                <h4>销售人员管理</h4>
-                <div id="salesPersonList">
-                    <!-- 销售人员列表将在这里动态生成 -->
-                </div>
-                
-                <div class="settings-row">
-                    <input type="text" id="newSalesPerson" placeholder="输入新销售人员姓名">
-                    <button class="btn btn-primary" onclick="addSalesPerson()">
-                        <i class="fas fa-plus"></i> 添加
-                    </button>
-                </div>
-                
                 <h4>价格设置</h4>
                 <div class="settings-row">
                     <label>标准洗车（轿车）</label>
@@ -1371,6 +1408,18 @@
                     <label>市场部提成</label>
                     <input type="number" id="commissionMarket" value="0.5">
                 </div>
+                
+                <h4>销售人员管理</h4>
+                <div id="salesPersonList">
+                    <!-- 销售人员列表将在这里动态生成 -->
+                </div>
+                
+                <div class="settings-row">
+                    <input type="text" id="newSalesPerson" placeholder="输入新销售人员姓名">
+                    <button class="btn btn-primary" onclick="addSalesPerson()">
+                        <i class="fas fa-plus"></i> 添加
+                    </button>
+                </div>
             </div>
             
             <div class="settings-actions">
@@ -1415,6 +1464,43 @@
             
             <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px;">
                 <button class="btn btn-danger" onclick="document.getElementById('importSalesModal').style.display = 'none'">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导入用户模态框 -->
+    <div id="importUserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 16px; max-width: 600px; width: 90%; box-shadow: 0 15px 40px rgba(0,0,0,0.25);">
+            <h3 style="margin-bottom: 20px; color: var(--primary); font-size: 22px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-file-excel"></i> 导入用户数据
+            </h3>
+            
+            <div style="text-align: center; padding: 20px; border: 2px dashed #dee2e6; border-radius: 10px; margin-bottom: 20px;">
+                <i class="fas fa-file-excel" style="font-size: 48px; color: #1d6f42; margin-bottom: 15px;"></i>
+                <h4>上传Excel文件</h4>
+                <p>请选择包含用户数据的Excel文件 (.xlsx)</p>
+                
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-warning">
+                        <i class="fas fa-upload"></i> 选择Excel文件
+                        <input type="file" id="userImportFile" accept=".xlsx" onchange="handleUserImport(event)" style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;">
+                    </button>
+                </div>
+                
+                <div style="margin-top: 20px; font-size: 13px; color: #6c757d;">
+                    <p>Excel格式要求：</p>
+                    <ul style="text-align: left; padding-left: 20px; margin-top: 10px;">
+                        <li>用户名、密码、角色、姓名</li>
+                        <li>第一行为标题行，从第二行开始为数据</li>
+                        <li>角色填写 user 或 admin</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px;">
+                <button class="btn btn-danger" onclick="document.getElementById('importUserModal').style.display = 'none'">
                     <i class="fas fa-times"></i> 关闭
                 </button>
             </div>
@@ -1511,6 +1597,7 @@
                 updateSalesTable();
                 filterVouchers();
                 updateTodayRedeemTable();
+                updateUserTable();
             } else {
                 alert('用户名或密码错误，请重试！');
             }
@@ -1546,6 +1633,7 @@
             updateSalesTable();
             filterVouchers();
             updateTodayRedeemTable();
+            updateUserTable();
             alert('数据已刷新！');
         }
 
@@ -1617,38 +1705,44 @@
             });
         }
         
-        // 更新用户列表
-        function updateUserList() {
-            const list = document.getElementById('userList');
-            list.innerHTML = '';
+        // 更新用户表格
+        function updateUserTable() {
+            const tableBody = document.getElementById('userTableBody');
+            tableBody.innerHTML = '';
             
-            Users.forEach((user, index) => {
-                if (user.username === AppData.currentUser.username) return; // 不显示当前用户
-                
-                const row = document.createElement('div');
-                row.className = 'settings-row';
-                row.innerHTML = `
-                    <span>${user.name} (${user.username})</span>
-                    <span class="permission-badge">${user.role === 'admin' ? '管理员' : '普通用户'}</span>
-                    <button class="btn btn-danger" onclick="removeUser(${index})">
-                        <i class="fas fa-trash"></i> 删除
-                    </button>
+            document.getElementById('userCount').textContent = `共 ${Users.length} 个用户`;
+            
+            if (Users.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 30px;">
+                            <i class="fas fa-inbox" style="font-size: 40px; color: #e9ecef; margin-bottom: 15px;"></i>
+                            <p>暂无用户数据</p>
+                        </td>
+                    </tr>
                 `;
-                list.appendChild(row);
-            });
-        }
-
-        // 添加销售人员
-        function addSalesPerson() {
-            const nameInput = document.getElementById('newSalesPerson');
-            const name = nameInput.value.trim();
-            
-            if (name && !AppData.settings.salesPersons.includes(name)) {
-                AppData.settings.salesPersons.push(name);
-                updateSalesPersonOptions();
-                nameInput.value = '';
-            } else if (AppData.settings.salesPersons.includes(name)) {
-                alert('该销售人员已存在！');
+            } else {
+                Users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.name}</td>
+                        <td>
+                            <span class="permission-badge">
+                                ${user.role === 'admin' ? '管理员' : '普通用户'}
+                            </span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="action-btn edit" onclick="editUser('${user.username}')">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="action-btn delete" onclick="deleteUser('${user.username}')">
+                                <i class="fas fa-trash"></i> 删除
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
             }
         }
         
@@ -1676,21 +1770,150 @@
                 name
             });
             
-            updateUserList();
+            // 清空表单
             document.getElementById('newUserName').value = '';
             document.getElementById('newUserPassword').value = '';
+            
+            // 更新表格
+            updateUserTable();
             
             alert('用户添加成功！');
         }
         
-        // 删除用户
-        function removeUser(index) {
-            if (confirm(`确定删除用户 ${Users[index].name} 吗？`)) {
-                Users.splice(index, 1);
-                updateUserList();
+        // 编辑用户
+        function editUser(username) {
+            const user = Users.find(u => u.username === username);
+            if (user) {
+                const newPassword = prompt('请输入新密码（留空则不修改）');
+                if (newPassword !== null) {
+                    if (newPassword) {
+                        user.password = newPassword;
+                    }
+                    
+                    const newRole = prompt('请输入新角色（admin 或 user）', user.role);
+                    if (newRole && (newRole === 'admin' || newRole === 'user')) {
+                        user.role = newRole;
+                    }
+                    
+                    const newName = prompt('请输入新姓名', user.name);
+                    if (newName) {
+                        user.name = newName;
+                    }
+                    
+                    updateUserTable();
+                    alert('用户信息已更新！');
+                }
             }
         }
+        
+        // 删除用户
+        function deleteUser(username) {
+            if (confirm(`确定删除用户 ${username} 吗？`)) {
+                const index = Users.findIndex(u => u.username === username);
+                if (index !== -1) {
+                    Users.splice(index, 1);
+                    updateUserTable();
+                    alert('用户已删除！');
+                }
+            }
+        }
+        
+        // 导出用户数据
+        function exportUserData() {
+            // 创建工作簿
+            const wb = XLSX.utils.book_new();
+            
+            // 准备数据
+            const headers = ['用户名', '密码', '角色', '姓名'];
+            const data = Users.map(user => [
+                user.username,
+                user.password,
+                user.role,
+                user.name
+            ]);
+            
+            // 添加工作表
+            const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+            XLSX.utils.book_append_sheet(wb, ws, "用户数据");
+            
+            // 生成Excel文件并下载
+            const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+            XLSX.writeFile(wb, `尊驾驿站用户数据_${dateStr}.xlsx`);
+        }
+        
+        // 导入用户数据
+        function importUserData() {
+            document.getElementById('importUserModal').style.display = 'flex';
+        }
+        
+        // 处理用户导入
+        function handleUserImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // 获取第一个工作表
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                
+                // 处理导入的数据
+                let importedCount = 0;
+                jsonData.forEach(row => {
+                    // 确保数据格式正确
+                    if (row['用户名'] && row['密码'] && row['角色']) {
+                        const existingIndex = Users.findIndex(u => u.username === row['用户名']);
+                        
+                        const newUser = {
+                            username: row['用户名'],
+                            password: row['密码'],
+                            role: row['角色'],
+                            name: row['姓名'] || row['用户名']
+                        };
+                        
+                        if (existingIndex !== -1) {
+                            // 更新现有用户
+                            Users[existingIndex] = newUser;
+                        } else {
+                            // 添加新用户
+                            Users.push(newUser);
+                        }
+                        
+                        importedCount++;
+                    }
+                });
+                
+                if (importedCount > 0) {
+                    updateUserTable();
+                    alert(`成功导入/更新 ${importedCount} 条用户记录！`);
+                } else {
+                    alert('未找到有效的用户数据！');
+                }
+                
+                // 关闭导入窗口
+                document.getElementById('importUserModal').style.display = 'none';
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
 
+        // 添加销售人员
+        function addSalesPerson() {
+            const nameInput = document.getElementById('newSalesPerson');
+            const name = nameInput.value.trim();
+            
+            if (name && !AppData.settings.salesPersons.includes(name)) {
+                AppData.settings.salesPersons.push(name);
+                updateSalesPersonOptions();
+                nameInput.value = '';
+            } else if (AppData.settings.salesPersons.includes(name)) {
+                alert('该销售人员已存在！');
+            }
+        }
+        
         // 删除销售人员
         function removeSalesPerson(index) {
             if (confirm(`确定删除销售人员 ${AppData.settings.salesPersons[index]} 吗？`)) {
@@ -1716,8 +1939,8 @@
             document.getElementById('commissionB').value = AppData.settings.commissions.packageB;
             document.getElementById('commissionMarket').value = AppData.settings.commissions.market;
             
-            // 更新用户列表
-            updateUserList();
+            // 更新销售人员列表
+            updateSalesPersonList();
         }
 
         // 隐藏设置面板
@@ -2866,12 +3089,23 @@
                 record.remark
             ]);
             
+            // 准备用户数据
+            const userHeaders = ['用户名', '密码', '角色', '姓名'];
+            const userData = Users.map(user => [
+                user.username,
+                user.password,
+                user.role,
+                user.name
+            ]);
+            
             // 添加工作表
             const salesWs = XLSX.utils.aoa_to_sheet([salesHeaders, ...salesData]);
             const redeemWs = XLSX.utils.aoa_to_sheet([redeemHeaders, ...redeemData]);
+            const userWs = XLSX.utils.aoa_to_sheet([userHeaders, ...userData]);
             
             XLSX.utils.book_append_sheet(wb, salesWs, "销售数据");
             XLSX.utils.book_append_sheet(wb, redeemWs, "核销数据");
+            XLSX.utils.book_append_sheet(wb, userWs, "用户数据");
             
             // 生成Excel文件并下载
             const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
